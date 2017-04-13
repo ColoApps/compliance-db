@@ -26,7 +26,7 @@ initializeDb(db => {
 
   // api routes v1 (/v1)
   router.use('/facilityinfo', facilityinfo({ config, db }));
-//  router.use('/facilityinfo/spccplan', spccplan({ config, db }));
+  //router.use('/spccplan', spccplan({ config, db }));
   router.use('/schedule', schedule({ config, db }));
   router.use('/questiontext', questiontext({ config, db }));
   router.use('/tankdescription', tankdescription({ config, db }));

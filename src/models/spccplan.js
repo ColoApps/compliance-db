@@ -10,11 +10,49 @@ let SPCCPlanSchema = new Schema({
   },
   facilityinfo: {type: Schema.Types.ObjectId, ref: 'FacilityInfo'},
 
-  drps: [{type: Schema.Types.ObjectId, ref: 'DrP'}],
+  drps1:  {
+    name: String,
+    title: String,
+    phone: String,
+    locofplan: String,
+    alternate: Boolean
+  },
+  drps2:  {
+    name: String,
+    title: String,
+    phone: String,
+    locofplan: String,
+    alternate: Boolean
+  },
+  drps3:  {
+    name: String,
+    title: String,
+    phone: String,
+    locofplan: String,
+    alternate: Boolean
+  },
 
-  stdquestion: [{type: Schema.Types.ObjectId, ref: 'StdQuestion'}],
+  totalsitecapacity: Number,
 
-  totalsitecapacity: Number
+  question1: {
+    "text": String,
+    "answer": Boolean
+  },
+  question2: {
+    "text": String,
+    "answer": Boolean
+  },
+  question3: {
+    "text": String,
+    "answer": Boolean
+  },
+  question4: {
+    "text": String,
+    "answer": Boolean
+  },
+ question5: {
+    "text": String,
+    "answer": Boolean
+  }
 });
-
 module.exports = mongoose.model('SPCCPlan', SPCCPlanSchema);

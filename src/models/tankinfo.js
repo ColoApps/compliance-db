@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
-import spccplan from './spccplan';
+import facilityinfo from './facilityinfo';
 let Schema = mongoose.Schema;
 
-let tankinfoSchema = new Schema ({
+let TankInfoSchema = new Schema ({
+  facilityinfo: {type: Schema.Types.ObjectId, ref: 'FacilityInfo'},
   category: String,
   tankdesc: String,
   capacity: Number,
@@ -12,21 +13,11 @@ let tankinfoSchema = new Schema ({
   shape: String,
   material: String,
   heatingcoils: Boolean,
-  effluenttreatment: {
-    eft: Boolean,
-    type: String
-  },
+  eft: Boolean,
+  type: String,
   partiallyburied: Boolean,
-  containment: {
-    doublewall: Boolean,
-    exists: Boolean,
-    material: String,
-    length: Number,
-    width: Number,
-    height: Number,
-    drainpipesexist: Boolean,
-  },
-  drainpipeproperties: [{type: Schema.Types.ObjectId, ref: 'DrainPipeProperties'}],
   registered: Boolean
 
 })
+
+module.exports = mongoose.model('TankInfo', TankInfoSchema);

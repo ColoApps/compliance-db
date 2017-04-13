@@ -22,12 +22,8 @@ let FacilityInfoSchema = new Schema ({
   facilitydescription: String,
   geometry: {
     type: { type: String, default: 'Point' },
-    coordinates: {
-      lat: Number,
-      long: Number
-    }
-  },
-
+    coordinates: [Number]
+},
   businesstype: String,
   beghours: String,
   endhours: String,
@@ -40,6 +36,8 @@ let FacilityInfoSchema = new Schema ({
   },
 
   tankinfo: [{type: Schema.Types.ObjectId, ref: 'TankInfo'}],
+
+  containment: [{type: Schema.Types.ObjectId, ref: 'Containment'}],
 
   loadingareaexists: Boolean,
   loadingareaproperties: [{type: Schema.Types.ObjectId, ref: 'LoadingArea'}],

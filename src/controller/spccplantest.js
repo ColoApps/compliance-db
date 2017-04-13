@@ -1,82 +1,79 @@
 import mongoose from 'mongoose';
 import { Router } from 'express';
 import SPCCPlan from '../models/spccplan';
-import PreviousDischarge from '../models/previousdischarge';
-import LoadingRackProperties from '../models/loadingrackproperties';
+import FacilityInfo from '../models/facilityinfo'
 import bodyParser from 'body-parser';
 
 
 export default({config, db}) => {
   let api = Router();
+  console.log('inside spccplan controller');
 
-//add loadingrack properties
-//'/v1/spccplan/loadingrackproperties/add/:id'
-api.post('/loadingrackproperties/add/:id', (req, res) => {
-  SPCCPlan.findById(req.params.id, (err, spccplan) => {
-    if (err) {
-      res.send(err);
-    }
-    let newLoadingRack = new LoadingRackProperties();
+  // 'v1/spccplan/add'
+  api.post('/add', (req, res) => {
+    console.log('inside post');
+    let newPetrolTypes = new PetrolTypes();
 
-    newLoadingRack.surfacematerial = req.body.surfacematerial;
-    newLoadingRack.directionofflow = req.body.directionofflow;
-    newLoadingRack.spccplan = spccplan._id;
-    newLoadingRack.save((err, newLoadingRack) => {
+    newPetrolTypes.type = req.body.type;
+
+    newPetrolTypes.save(err => {
       if (err) {
         res.send(err);
       }
-      spccplan.loadingrackproperties.push(newLoadingRack);
-      spccplan.save(err => {
-        if (err) {
-          res.send(err);
-        }
-        res.json({ message: 'Loading Rack info saved' });
-      });
+      res.json({ message: "PetrolTypes saved successfully."});
+    });
+  });
+
+  api.get('/:id', (req, res) => {
+    console.log('using spccplan controller');
+  //  SPCCPlan.find({}, (err, spccplans) => {
+  //SPCCPlan.find( { 'spccplans._id': req.params.id }, (err, spccplan) => {
+    SPCCPlan.find({facilityinfo: req.params.id}, (err, spccplan) => {
+      if (err) {
+        res.send(err);
+      }
+      res.json(spccplan);
+    });
+  });
+
+// '/v1/petroltypes - get individual item'
+api.get('/:id', (req, res) => {
+  PetrolTypes.findById(req.params.id, (err, petroltypes) => {
+    if (err) {
+      res.send(err);
+    }
+    res.json(petroltypes);
+  });
+});
+
+//'/v1/petroltypes - put (update) and item'
+api.put('/:id', (req, res) => {
+  PetrolTypes.findById(req.params.id, (err, petroltype) => {
+    if (err) {
+      res.send(err);
+    }
+    petroltype.type = req.body.type;
+    petroltype.save(err => {
+      if (err) {
+        res.send(err);
+      }
+      res.json({ message: "petroltypes updated successfully."});
     });
   });
 });
 
-// get previousdischarge for site
-//'/v1/spccplan/previousdischarge'
-api.get('/previousdischarge/', (req, res) => {
-  PreviousDischarge.find({}, (err, previousdischarges) => {
+//'v1/petroltypes = delete an item'
+api.delete('/:id', (req, res) => {
+  PetrolTypes.remove({
+    _id: req.params.id
+  },(err, petroltypes) => {
     if (err) {
       res.send(err);
     }
-    res.json(previousdischarges);
+    res.json({ message: "material deleted"});
   });
 });
-
-//add a previousdischarge for a specific spccplan
-//'/v1/spccplan/previousdischarge/add/:id'
-api.post('/previousdischarge/add/:id', (req, res) => {
-  SPCCPlan.findById(req.params.id, (err, spccplan) => {
-    if (err) {
-      res.send(err);
-    }
-      let newPreviousDischarge = new PreviousDischarge();
-
-      newPreviousDischarge.properties.date = req.body.date;
-      newPreviousDischarge.properties.material = req.body.material;
-      newPreviousDischarge.properties.volume = req.body.volume;
-      newPreviousDischarge.properties.location = req.body.location;
-      newPreviousDischarge.properties.spccplan = spccplan._id;
-      newPreviousDischarge.save((err, previousdischarge) => {
-        console.log(newPreviousDischarge);
-        if (err) {
-          res.send(err);
-        }
-        spccplan.previousdischarge.push(newPreviousDischarge);
-        spccplan.save(err => {
-          if (err) {
-            res.send(err);
-          }
-          res.json({ message: "Previous Discharge info saved." });
-        });
-      });
-    });
-});
-
 return api;
+
 
 }
