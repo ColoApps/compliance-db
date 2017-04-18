@@ -175,6 +175,34 @@ api.post('/loadingareaproperties/add/:id', (req, res) => {
   });
 });
 
+api.put('/loadingrackproperties/update/:id', (req, res) => {
+  var rackToUpdate = req.params.id;
+  console.log(rackToUpdate);
+  FacilityInfo.find({'loadingrackproperties._id': rackToUpdate}, (err, loadingrackproperties) => {
+    console.log('step 1');
+    console.log(loadingrackproperties);
+    if (err) {
+      res.send(err);
+    } else {
+
+        surfacematerial = req.body.surfacematerial || loadingrackproperties.surfacematerial;
+        directionofflow = req.body.directionofflow || loadingrackproperties.directionofflow;
+
+        loadingrackproperties.save(function (err, loadingrackproperties){
+          if (err) {
+            res.send(err)
+          }
+          var response = {
+            message: "Rack info updated",
+            id: areaToUpdate,
+            loadingrackproperties
+          };
+          res.send(response);
+        });
+      }
+    });
+  });
+
 // ************ LoadingRacks ****************
 
 // add loadingrackproperties
