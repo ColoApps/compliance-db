@@ -8,9 +8,10 @@ import LoadingRackProperties from '../models/loadingrackproperties';
 import PreviousDischarge from '../models/previousdischarge';
 import Containment from '../models/containment';
 
+
 export default({config, db }) => {
   let api = Router();
-
+  var mongoose = require('mongoose');
 // **********FacilityInfo***************
 
   //'/v1/facilityinfo/add'
@@ -46,6 +47,9 @@ api.post('/add', (req, res) => {
   newFacilityInfo.loadingareaexists = req.body.loadingareaexists;
 
   newFacilityInfo.loadingracksexists = req.body.loadingracksexists;
+  newFacilityInfo.loadingrackproperties.racknumber = req.body.loadingrackproperties.racknumber;
+  newFacilityInfo.loadingrackproperties.surfacematerial = req.body.loadingrackproperties.surfacematerial;
+  newFacilityInfo.loadingrackproperties.directionofflow = req.body.loadingrackproperties.directionofflow;
 
   newFacilityInfo.loadingoperations.exists = req.body.loadingoperations.exists;
   newFacilityInfo.loadingoperations.specific = req.body.loadingoperations.specific;
@@ -175,35 +179,43 @@ api.post('/loadingareaproperties/add/:id', (req, res) => {
   });
 });
 
-api.put('/loadingrackproperties/update/:id', (req, res) => {
-  var rackToUpdate = req.params.id;
-  console.log(rackToUpdate);
-  FacilityInfo.find({'loadingrackproperties._id': rackToUpdate}, (err, loadingrackproperties) => {
-    console.log('step 1');
-    console.log(loadingrackproperties);
-    if (err) {
-      res.send(err);
-    } else {
+api.put('/loadingareaproperties/:id/edit', (req, res) => {
+  console.log(req.params.id);
 
-        surfacematerial = req.body.surfacematerial || loadingrackproperties.surfacematerial;
-        directionofflow = req.body.directionofflow || loadingrackproperties.directionofflow;
-
-        loadingrackproperties.save(function (err, loadingrackproperties){
-          if (err) {
-            res.send(err)
-          }
-          var response = {
-            message: "Rack info updated",
-            id: areaToUpdate,
-            loadingrackproperties
-          };
-          res.send(response);
-        });
+  LoadingAreaProperties.findOneAndUpdate({'_id': req.params.id},
+    { "$set": {'surfacematerial': req.body.surfacematerial,
+               'directionofflow': req.body.directionofflow}},
+    {new: true}).exec(function(err, loadingareaproperties) {
+      console.log(loadingareaproperties);
+      if (err) {
+        res.send(err);
+      } else if (loadingareaproperties != null) {
+        res.json ({ message: 'Loading Area saved' });
+      } else {
+        res.send('Area not found');
       }
-    });
   });
 
+});
 // ************ LoadingRacks ****************
+
+api.put('/loadingrackproperties/:id/edit', (req, res) => {
+  console.log(req.params.id);
+
+  LoadingRackProperties.findOneAndUpdate({'_id': req.params.id},
+    { "$set": {'surfacematerial': req.body.surfacematerial,
+               'directionofflow': req.body.directionofflow}},
+    {new: true}).exec(function(err, loadingrackproperties) {
+      console.log(loadingrackproperties);
+      if (err) {
+        res.send(err);
+      } else if (loadingrackproperties != null) {
+        res.json ({ message: 'Loading Rack saved' });
+      } else {
+        res.send('rack not found');
+      }
+  });
+});
 
 // add loadingrackproperties
 //'/v1/facilityinfo/loadingrackproperties/add/:id'
@@ -303,6 +315,46 @@ api.get('/spccplans/:id', (req, res) => {
     res.json(spccplan);
   });
 });
+
+api.put('/spccplan/:id/edit', (req, res) => {
+  console.log(req.params.id);
+
+  SPCCPlan.findOneAndUpdate({'_id': req.params.id},
+    { "$set": {'contactinfo.name': req.body.contactinfo.name,
+               'contactinfo.phonenumber': req.body.contactinfo.phonenumber,
+               'drps1.name': req.body.drps1.name,
+               'drps1.title': req.body.drps1.title,
+               'drps1.phone': req.body.drps1.phone,
+               'drps1.locofplan': req.body.drps1.locofplan,
+               'drps2.name': req.body.drps2.name,
+               'drps2.title': req.body.drps2.title,
+               'drps2.phone': req.body.drps2.phone,
+               'drps2.locofplan': req.body.drps2.locofplan,
+               'drps3.name': req.body.drps3.name,
+               'drps3.title': req.body.drps3.title,
+               'drps3.phone': req.body.drps3.phone,
+               'drps3.locofplan': req.body.drps3.locofplan,
+               'question1.text': req.body.question1.text,
+               'question1.answer': req.body.question1.answer,
+               'question2.text': req.body.question2.text,
+               'question2.answer': req.body.question2.answer,
+               'question3.text': req.body.question3.text,
+               'question3.answer': req.body.question3.answer,
+               'question4.text': req.body.question4.text,
+               'question4.answer': req.body.question4.answer,
+               'question5.text': req.body.question5.text,
+               'question5.answer': req.body.question5.answer}},
+    {new: true}).exec(function(err, spccplan) {
+      console.log(spccplan);
+      if (err) {
+        res.send(err);
+      } else if (spccplan != null) {
+        res.json ({ message: 'SPCCPlan saved' });
+      } else {
+        res.send('spccplan not found');
+      }
+  });
+});
 // ************ PreviousDischarge ***************
 
 // add previousdischarge
@@ -348,6 +400,26 @@ api.get('/previousdischarge/:id', (req, res) => {
   });
 });
 
+api.put('/previousdischarge/:id/edit', (req, res) => {
+  console.log(req.params.id);
+
+  PreviousDischarge.findOneAndUpdate({'_id': req.params.id},
+    { "$set": {'date': req.body.date,
+                'material': req.body.material,
+                'volume': req.body.volume,
+               'location': req.body.location}},
+    {new: true}).exec(function(err, previousdischarge) {
+      console.log(previousdischarge);
+      if (err) {
+        res.send(err);
+      } else if (previousdischarge != null) {
+        res.json ({ message: 'previousdischarge saved' });
+      } else {
+        res.send('previousdischarge not found');
+      }
+  });
+
+});
 // ************ TankInfo ***************
 // add tankinfo
 //'/v1/facilityinfo/tankinfo/add'
@@ -404,6 +476,34 @@ api.get('/tankinfo/:id', (req, res) => {
   });
 });
 
+api.put('/tankinfo/:id/edit', (req, res) => {
+  console.log(req.params.id);
+  TankInfo.findOneAndUpdate({'_id': req.params.id},
+    { "$set": {'category': req.body.category,
+                'tankdesc': req.body.tankdesc,
+                'capacity': req.body.capacity,
+               'unit': req.body.unit,
+                'petroltype': req.body.petroltype,
+                'empty': req.body.empty,
+                'shape': req.body.shape,
+                'material': req.body.material,
+                'heatingcoils': req.body.heatingcoils,
+                'eft': req.body.eft,
+                'type': req.body.type,
+                'partiallyburied': req.body.partiallyburied,
+                'registered': req.body.registered}},
+    {new: true}).exec(function(err, tankinfo) {
+      console.log(tankinfo);
+      if (err) {
+        res.send(err);
+      } else if (tankinfo != null) {
+        res.json ({ message: 'tankinfo saved' });
+      } else {
+        res.send('tankinfo not found');
+      }
+  });
+
+});
 // ********** Containment ******************
 
 api.post('/containment/add/:id', (req, res) => {
@@ -427,6 +527,21 @@ api.post('/containment/add/:id', (req, res) => {
      newContainment.pipe1properties.capped = req.body.pipe1properties.capped;
      newContainment.pipe1properties.open = req.body.pipe1properties.open;
      newContainment.pipe1properties.location = req.body.pipe1properties.location;
+
+     newContainment.pipe2properties.valved = req.body.pipe2properties.valved;
+     newContainment.pipe2properties.capped = req.body.pipe2properties.capped;
+     newContainment.pipe2properties.open = req.body.pipe2properties.open;
+     newContainment.pipe2properties.location = req.body.pipe2properties.location;
+
+     newContainment.pipe3properties.valved = req.body.pipe3properties.valved;
+     newContainment.pipe3properties.capped = req.body.pipe3properties.capped;
+     newContainment.pipe3properties.open = req.body.pipe3properties.open;
+     newContainment.pipe3properties.location = req.body.pipe3properties.location;
+
+     newContainment.pipe4properties.valved = req.body.pipe4properties.valved;
+     newContainment.pipe4properties.capped = req.body.pipe4properties.capped;
+     newContainment.pipe4properties.open = req.body.pipe4properties.open;
+     newContainment.pipe4properties.location = req.body.pipe4properties.location;
      newContainment.facilityinfo = facilityinfo;
 
      newContainment.save((err, containment) => {
@@ -455,6 +570,51 @@ api.get('/containment/:id', (req, res) => {
     }
     res.json(containment);
   });
+});
+
+api.put('/containment/:id/edit', (req, res) => {
+  console.log(req.params.id);
+  Containment.findOneAndUpdate({'_id': req.params.id},
+    { "$set": {'doublewall': req.body.doublewall,
+                'exists': req.body.exists,
+                'material': req.body.material,
+                'length': req.body.length,
+                'width': req.body.width,
+                'height': req.body.height,
+                'drainpipesexist': req.body.material,
+
+                'pipe1properties.valved': req.body.pipe1properties.valved,
+                'pipe1properties.capped': req.body.pipe1properties.capped,
+                'pipe1properties.open': req.body.pipe1properties.open,
+                'pipe1properties.location': req.body.pipe1properties.location,
+
+                'pipe2properties.valved': req.body.pipe2properties.valved,
+                'pipe2properties.capped': req.body.pipe2properties.capped,
+                'pipe2properties.open': req.body.pipe2properties.open,
+                'pipe2properties.location': req.body.pipe2properties.location,
+
+                'pipe3properties.valved': req.body.pipe3properties.valved,
+                'pipe3properties.capped': req.body.pipe3properties.capped,
+                'pipe3properties.open': req.body.pipe3properties.open,
+                'pipe3properties.location': req.body.pipe3properties.location,
+
+                'pipe4properties.valved': req.body.pipe4properties.valved,
+                'pipe4properties.capped': req.body.pipe4properties.capped,
+                'pipe4properties.open': req.body.pipe4properties.open,
+                'pipe4properties.location': req.body.pipe4properties.location,
+
+                'registered': req.body.registered}},
+    {new: true}).exec(function(err, containment) {
+      console.log(containment);
+      if (err) {
+        res.send(err);
+      } else if (containment != null) {
+        res.json ({ message: 'containment saved' });
+      } else {
+        res.send('containment not found');
+      }
+  });
+
 });
 
 return api;

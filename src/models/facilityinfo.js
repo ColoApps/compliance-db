@@ -54,7 +54,15 @@ let FacilityInfoSchema = new Schema ({
   previousdischargeexists: Boolean,
   previousdischarge: [{type: Schema.Types.ObjectId, ref: 'PreviousDischarge'}],
 
-  spccplan: [{type: Schema.Types.ObjectId, ref: 'TankInfo'}]
+  spccplan: [{type: Schema.Types.ObjectId, ref: 'TankInfo'}],
+
+  pipinginspection: [{type: Schema.Types.ObjectId, ref: 'PipingQuestion'}],
+
+  monthlyinspectionheader: [{type: Schema.Types.ObjectId, ref: 'MonthlyInspectionHeader'}],
+  monthlyinspectionresults: [{type: Schema.Types.ObjectId, ref: 'MonthlyInspectionResults'}],
+
+  annualinspectionheader: [{type: Schema.Types.ObjectId, ref: 'AnnualInspectionHeader'}],
+  annualinspectionresults: [{type: Schema.Types.ObjectId, ref: 'AnnualInspectionResults'}]
 
 })
 
