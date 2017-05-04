@@ -157,6 +157,7 @@ api.delete('/:id', (req, res) => {
     res.json({ message: "FacilityInfo successfully removed." });
   });
 });
+
 // ******* LoadingArea ******************
 
 // add loadingareaproperties
@@ -214,6 +215,55 @@ api.put('/loadingareaproperties/:id/edit', (req, res) => {
       }
   });
 });
+
+// //v1/loadingareaproperties/:id - DELETE - remove a loading Area
+api.delete('/loadingareaproperties/:id/:loadingareaid', (req, res) => {
+  LoadingAreaProperties.findById(req.params.loadingareaid, (err, loadingareaproperties) => {
+    console.log(loadingareaproperties);
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (loadingareaproperties === null) {
+      res.status(404).send("loading area not found")
+      return;
+    }
+    LoadingAreaProperties.remove({
+      _id: req.params.loadingareaid
+    }, (err, loadingareaproperties) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      res.json({message: "Loading Area successufully removed."});
+    }
+  );
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      console.log(facilityinfo);
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (FacilityInfo === null) {
+        res.status(404).send("facility not found")
+        return;
+      }
+
+      var arraypostition =  facilityinfo.loadingareaproperties.indexOf(req.params.loadingareaid);
+      console.log(arraypostition);
+      facilityinfo.loadingareaproperties.splice(arraypostition, 1);
+      console.log(facilityinfo.loadingareaproperties);
+      facilityinfo.save(err => {
+        if (err) {
+          res.send(err);
+        }
+      //  res.json({ message: "loading area array updated."});
+      });
+    });
+  });
+});
+
 // ************ LoadingRacks ****************
 
 api.put('/loadingrackproperties/:id/edit', (req, res) => {
