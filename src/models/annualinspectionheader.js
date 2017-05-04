@@ -2,11 +2,10 @@ import mongoose from 'mongoose';
 import spccplan from './facilityinfo';
 let Schema = mongoose.Schema;
 
-let AnnualInpsectionHeaderSchema = new Schema({
+let AnnualInspectionHeaderSchema = new Schema({
   date: String,
   inspectorname: String,
   tanks: String,
-  inspectionID: String,
   facilityinfo: {type: Schema.Types.ObjectId, ref: 'FacilityInfo'}
 });
 

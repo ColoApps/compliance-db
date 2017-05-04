@@ -3,10 +3,11 @@ import spccplan from './facilityinfo';
 let Schema = mongoose.Schema;
 
 let AnnualInspectionResultsSchema = new Schema({
-  inspectionID: String,
+  inspectionheaderID: String,
   questionnumber: String,
   questiontext: String,
   answer: Boolean,
+  actionrequired: Boolean,
   comment: String,
   facilityinfo: {type: Schema.Types.ObjectId, ref: 'FacilityInfo'}
 });

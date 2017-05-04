@@ -7,11 +7,18 @@ import LoadingAreaProperties from '../models/loadingareaproperties';
 import LoadingRackProperties from '../models/loadingrackproperties';
 import PreviousDischarge from '../models/previousdischarge';
 import Containment from '../models/containment';
-
+import PipingInspection from '../models/pipinginspection';
+import MonthlyInspectionHeader from '../models/monthlyinspectionheader';
+import AnnualInspectionHeader from '../models/annualinspectionheader';
+import MonthlyInspectionResults from '../models/monthlyinspectionresults';
+import AnnualInspectionResults from '../models/annualinspectionresults';
 
 export default({config, db }) => {
   let api = Router();
   var mongoose = require('mongoose');
+  var trueInd = 1;
+  var falseInd = 0;
+
 // **********FacilityInfo***************
 
   //'/v1/facilityinfo/add'
@@ -163,7 +170,7 @@ api.post('/loadingareaproperties/add/:id', (req, res) => {
     let newLoadingAreaProperties = LoadingAreaProperties();
      newLoadingAreaProperties.surfacematerial = req.body.surfacematerial;
      newLoadingAreaProperties.directionofflow = req.body.directionofflow;
-     newLoadingAreaProperties.properties = facilityinfo._id;
+     newLoadingAreaProperties.facilityinfo = facilityinfo._id;
      newLoadingAreaProperties.save((err, loadingareaproperties) => {
        if (err) {
          res.send(err);
@@ -178,6 +185,17 @@ api.post('/loadingareaproperties/add/:id', (req, res) => {
      });
   });
 });
+
+// 'v1'/loadingareaproperties/:id - get loadingarea by id
+api.get('/loadingareaproperties/:id', (req, res) => {
+  console.log('inside get lap');
+  LoadingAreaProperties.find({'facilityinfo': req.params.id}, (err, loadingareaproperties) => {
+    if (err) {
+      res.send(err);
+    }
+    res.json(loadingareaproperties);
+  });
+} );
 
 api.put('/loadingareaproperties/:id/edit', (req, res) => {
   console.log(req.params.id);
@@ -195,7 +213,6 @@ api.put('/loadingareaproperties/:id/edit', (req, res) => {
         res.send('Area not found');
       }
   });
-
 });
 // ************ LoadingRacks ****************
 
@@ -217,6 +234,17 @@ api.put('/loadingrackproperties/:id/edit', (req, res) => {
   });
 });
 
+// 'v1'/loadingrackproperties/:id - get loadingrack by id
+api.get('/loadingrackproperties/:id', (req, res) => {
+  console.log('inside get lrp');
+  LoadingRackProperties.find({'facilityinfo': req.params.id}, (err, loadingrackproperties) => {
+    if (err) {
+      res.send(err);
+    }
+    res.json(loadingrackproperties);
+  });
+} );
+
 // add loadingrackproperties
 //'/v1/facilityinfo/loadingrackproperties/add/:id'
 
@@ -228,7 +256,7 @@ api.post('/loadingrackproperties/add/:id', (req, res) => {
     let newLoadingRackProperties = LoadingRackProperties();
      newLoadingRackProperties.surfacematerial = req.body.surfacematerial;
      newLoadingRackProperties.directionofflow = req.body.directionofflow;
-     newLoadingRackProperties.properties = facilityinfo._id;
+     newLoadingRackProperties.facilityinfo = facilityinfo._id;
      newLoadingRackProperties.save((err, loadingrackproperties) => {
        if (err) {
          res.send(err);
@@ -507,7 +535,7 @@ api.put('/tankinfo/:id/edit', (req, res) => {
 // ********** Containment ******************
 
 api.post('/containment/add/:id', (req, res) => {
-  console.log('inside tank post');
+  console.log('inside containment post');
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     console.log('inside add containment');
     if (err) {
@@ -614,8 +642,380 @@ api.put('/containment/:id/edit', (req, res) => {
         res.send('containment not found');
       }
   });
-
 });
+
+  // ************ PipingInspection ***************
+
+  // add pipinginspection
+  //'/v1/facilityinfo/pipinginspection/add/:id''
+
+  api.post('/pipinginspection/add/:id', (req, res) => {
+    console.log('inside post pi');
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      console.log(req.params);
+      if (err) {
+        res.send(err);
+      }
+      let newPipingInspection = PipingInspection();
+       newPipingInspection.date = req.body.date;
+       newPipingInspection.questionnumber = req.body.questionnumber;
+       newPipingInspection.questiontext = req.body.questiontext;
+       newPipingInspection.answer = req.body.answer;
+       newPipingInspection.facilityinfo = facilityinfo._id;
+       newPipingInspection.save((err, pipinginspectione) => {
+         if (err) {
+           res.send(err);
+         }
+         facilityinfo.pipinginspection.push(newPipingInspection);
+         facilityinfo.save(err => {
+           if (err) {
+             res.send(err);
+
+           }
+           res.json({ message: 'pipinginspection saved' });
+         });
+       });
+    });
+  });
+
+  // get pipinginspection - specific
+  // '/v1/pipinginspection/:id - get individual item'
+  api.get('/pipinginspection/:id', (req, res) => {
+    console.log('inside get pipinginspection');
+    PipingInspection.find({facilityinfo: req.params.id}, (err, pipinginspection) => {
+      if (err) {
+        res.send(err);
+      }
+      res.json(pipinginspection);
+    });
+  });
+
+  api.put('/pipinginspection/:id/edit', (req, res) => {
+    console.log(req.params.id);
+
+    PipingInspection.findOneAndUpdate({'_id': req.params.id},
+      { "$set": {'date': req.body.date,
+                  'questionnumber': req.body.questionnumber,
+                  'questiontext': req.body.questiontext,
+                 'answer': req.body.answer}},
+      {new: true}).exec(function(err, pipinginspection) {
+        console.log(pipinginspection);
+        if (err) {
+          res.send(err);
+        } else if (pipinginspection != null) {
+          res.json ({ message: 'pipinginspection saved' });
+        } else {
+          res.send('pipinginspection not found');
+        }
+    });
+
+  });
+
+  // ************ MonthlyInspectionHeader ***************
+
+  // add monthlyinspectionheader
+  //'/v1/facilityinfo/monthlyinspectionheader/add/:id''
+
+  api.post('/monthlyinspectionheader/add/:id', (req, res) => {
+    console.log('inside post mih');
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      console.log(req.params);
+      if (err) {
+        res.send(err);
+      }
+      let newMonthlyInspectionHeader = MonthlyInspectionHeader();
+       newMonthlyInspectionHeader.date = req.body.date;
+       newMonthlyInspectionHeader.inspectorname = req.body.inspectorname;
+       newMonthlyInspectionHeader.tanks = req.body.tanks;
+       newMonthlyInspectionHeader.facilityinfo = facilityinfo._id;
+       newMonthlyInspectionHeader.save((err, monthlyinspectionheader) => {
+         if (err) {
+           res.send(err);
+         }
+         facilityinfo.monthlyinspectionheader.push(newMonthlyInspectionHeader);
+         facilityinfo.save(err => {
+           if (err) {
+             res.send(err);
+
+           }
+           res.json({ message: 'monthlyinspectionheader saved' });
+         });
+       });
+    });
+  });
+
+  // get monthlyinspectionheader - specific
+  // '/v1/monthlyinspectionheader/:id - get individual item'
+  api.get('/monthlyinspectionheader/:id', (req, res) => {
+    console.log('inside get monthlyinspectionheader');
+    MonthlyInspectionHeader.find({facilityinfo: req.params.id}, (err, monthlyinspectionheader) => {
+      if (err) {
+        res.send(err);
+      }
+      res.json(monthlyinspectionheader);
+    });
+  });
+
+// put monthlyinspectionheader
+// '/v1/monthlyinspectionheader/:id '
+  api.put('/monthlyinspectionheader/:id/edit', (req, res) => {
+    console.log(req.params.id);
+    MonthlyInspectionHeader.findOneAndUpdate({'_id': req.params.id},
+      { "$set": {'date': req.body.date,
+                  'inspectorname': req.body.inspectorname,
+                  'tanks': req.body.tanks,}},
+      {new: true}).exec(function(err, monthlyinspectionheader) {
+        console.log(monthlyinspectionheader);
+        if (err) {
+          res.send(err);
+        } else if (monthlyinspectionheader != null) {
+          res.json ({ message: 'monthlyinspectionheader saved' });
+        } else {
+          res.send('monthlyinspectionheader not found');
+        }
+    });
+  });
+
+  // ************ MonthlyInspectionResults ***************
+
+  // add monthlyinspectionresults
+  //'/v1/facilityinfo/monthlyinspectionresults/add/:id''
+
+  api.post('/monthlyinspectionresults/add/:id/:headerid', (req, res) => {
+    console.log('inside post mih');
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      console.log(req.params);
+      if (err) {
+        res.send(err);
+      }
+      let newMonthlyInspectionResults = MonthlyInspectionResults();
+       newMonthlyInspectionResults.inspectionheaderID = req.params.headerid;
+       newMonthlyInspectionResults.questionnumber = req.body.questionnumber;
+       newMonthlyInspectionResults.questiontext = req.body.questiontext;
+       newMonthlyInspectionResults.answer = req.body.answer;
+       newMonthlyInspectionResults.actionrequired = req.body.actionrequired;
+       newMonthlyInspectionResults.comment = req.body.comment;
+       newMonthlyInspectionResults.facilityinfo = facilityinfo._id;
+       newMonthlyInspectionResults.save((err, monthlyinspectionresults) => {
+         if (err) {
+           res.send(err);
+         }
+         facilityinfo.monthlyinspectionresults.push(newMonthlyInspectionResults);
+         facilityinfo.save(err => {
+           if (err) {
+             res.send(err);
+
+           }
+           res.json({ message: 'monthlyinspectionresults saved' });
+         });
+       });
+    });
+  });
+
+  // get monthlyinspectionresults - specific facility
+  // '/v1/monthlyinspectionresults/:id - get individual item'
+api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
+
+    var byfacility;
+    byfacility = req.params.byfacility;
+
+    if ( byfacility == trueInd) {
+      console.log('search by facility');
+//      getMonthlyResultsByFacility();
+      MonthlyInspectionResults.find({facilityinfo: req.params.id}, (err, monthlyinspectionresults) => {
+        if (err) {
+          res.send(err);
+        }
+        res.json(monthlyinspectionresults);
+      });
+    } else {
+      console.log('search by header');
+      MonthlyInspectionResults.find({inspectionheaderID: req.params.id}, (err, monthlyinspectionresults) => {
+        if (err) {
+          res.send(err);
+        }
+        res.json(monthlyinspectionresults);
+      });
+    }
+  });
+
+
+// put monthlyinspectionresults
+// '/v1/monthlyinspectionresults/:id '
+  api.put('/monthlyinspectionresults/:id/edit', (req, res) => {
+    console.log(req.params.id);
+    MonthlyInspectionResults.findOneAndUpdate({'_id': req.params.id},
+      { "$set": {'questionnumber': req.body.questionnumber,
+                 'questiontext': req.body.questiontext,
+                 'answer': req.body.answer,
+                 'actionrequired': req.body.actionrequired,
+                 'comment': req.body.comment}},
+      {new: true}).exec(function(err, monthlyinspectionresults) {
+        console.log(monthlyinspectionresults);
+        if (err) {
+          res.send(err);
+        } else if (monthlyinspectionresults != null) {
+          res.json ({ message: 'monthlyinspectionresults saved' });
+        } else {
+          res.send('monthlyinspectionresults not found');
+        }
+    });
+  });
+
+  // ************ AnnualInspectionHeader ***************
+
+  // add annualinspectionheader
+  //'/v1/facilityinfo/annualinspectionheader/add/:id''
+
+  api.post('/annualinspectionheader/add/:id', (req, res) => {
+    console.log('inside post aih');
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      console.log(req.params);
+      if (err) {
+        res.send(err);
+      }
+      let newAnnualInspectionHeader = AnnualInspectionHeader();
+       newAnnualInspectionHeader.date = req.body.date;
+       newAnnualInspectionHeader.inspectorname = req.body.inspectorname;
+       newAnnualInspectionHeader.tanks = req.body.tanks;
+       newAnnualInspectionHeader.facilityinfo = facilityinfo._id;
+       newAnnualInspectionHeader.save((err, monthlyinspectionheader) => {
+         if (err) {
+           res.send(err);
+         }
+         facilityinfo.annualinspectionheader.push(newAnnualInspectionHeader);
+         facilityinfo.save(err => {
+           if (err) {
+             res.send(err);
+
+           }
+           res.json({ message: 'annualinspectionheader saved' });
+         });
+       });
+    });
+  });
+
+  // get annualinspectionheader - specific
+  // '/v1/annualinspectionheader/:id - get individual item'
+  api.get('/annualinspectionheader/:id', (req, res) => {
+    console.log('inside get annualinspectionheader');
+  AnnualInspectionHeader.find({facilityinfo: req.params.id}, (err, annualinspectionheader) => {
+      if (err) {
+        res.send(err);
+      }
+      res.json(annualinspectionheader);
+    });
+  });
+
+// put annualinspectionheader
+// '/v1/annualinspectionheader/:id '
+  api.put('/annualinspectionheader/:id/edit', (req, res) => {
+    console.log(req.params.id);
+    AnnualInspectionHeader.findOneAndUpdate({'_id': req.params.id},
+      { "$set": {'date': req.body.date,
+                  'inspectorname': req.body.inspectorname,
+                  'tanks': req.body.tanks,}},
+      {new: true}).exec(function(err, annualinspectionheader) {
+        console.log(annualinspectionheader);
+        if (err) {
+          res.send(err);
+        } else if (annualinspectionheader != null) {
+          res.json ({ message: 'annualinspectionheader saved' });
+        } else {
+          res.send('annualinspectionheader not found');
+        }
+    });
+  });
+
+  // ************ AnnualInspectionResults ***************
+
+  // add annualinspectionresults
+  //'/v1/facilityinfo/annualinspectionresults/add/:id''
+
+  api.post('/annualinspectionresults/add/:id/:headerid', (req, res) => {
+    console.log('inside post mih');
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      console.log(req.params);
+      if (err) {
+        res.send(err);
+      }
+      let newAnnualInspectionResults = AnnualInspectionResults();
+       newAnnualInspectionResults.inspectionheaderID = req.params.headerid;
+       newAnnualInspectionResults.questionnumber = req.body.questionnumber;
+       newAnnualInspectionResults.questiontext = req.body.questiontext;
+       newAnnualInspectionResults.answer = req.body.answer;
+       newAnnualInspectionResults.actionrequired = req.body.actionrequired;
+       newAnnualInspectionResults.comment = req.body.comment;
+       newAnnualInspectionResults.facilityinfo = facilityinfo._id;
+       newAnnualInspectionResults.save((err, annualinspectionresults) => {
+         if (err) {
+           res.send(err);
+         }
+         facilityinfo.annualinspectionresults.push(newAnnualInspectionResults);
+         facilityinfo.save(err => {
+           if (err) {
+             res.send(err);
+
+           }
+           res.json({ message: 'annualinspectionresults saved' });
+         });
+       });
+    });
+  });
+
+  // get annualinspectionresults - specific facility
+  // '/v1/annualinspectionresults/:id - get individual item'
+
+api.get('/annualinspectionresults/:id/:byfacility/:byheader', (req, res) => {
+
+      var byfacility;
+      byfacility = req.params.byfacility;
+
+      if ( byfacility == trueInd) {
+        console.log('search by facility');
+  //      get AnnualResultsByFacility();
+        AnnualInspectionResults.find({facilityinfo: req.params.id}, (err, annualinspectionresults) => {
+          if (err) {
+            res.send(err);
+          }
+          res.json(annualinspectionresults);
+        });
+      } else {
+        console.log('search by header');
+        AnnualInspectionResults.find({inspectionheaderID: req.params.id}, (err, annualinspectionresults) => {
+          if (err) {
+            res.send(err);
+          }
+          res.json(annualinspectionresults);
+        });
+      }
+    });
+
+// put annualinspectionresults
+// '/v1/annualinspectionresults/:id '
+  api.put('/annualinspectionresults/:id/edit', (req, res) => {
+    console.log(req.params.id);
+    AnnualInspectionResults.findOneAndUpdate({'_id': req.params.id},
+      { "$set": {'questionnumber': req.body.questionnumber,
+                 'questiontext': req.body.questiontext,
+                 'answer': req.body.answer,
+                 'actionrequired': req.body.actionrequired,
+                 'comment': req.body.comment}},
+      {new: true}).exec(function(err, annualinspectionresults) {
+        console.log(annualinspectionresults);
+        if (err) {
+          res.send(err);
+        } else if (annualinspectionresults != null) {
+          res.json ({ message: 'annualinspectionresults saved' });
+        } else {
+          res.send('annualinspectionresults not found');
+        }
+    });
+  });
 
 return api;
 

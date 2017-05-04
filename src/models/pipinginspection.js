@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import spccplan from './facilityinfo';
 let Schema = mongoose.Schema;
 
-let PipingQuestionSchema = new Schema({
+let PipingInspectionSchema = new Schema({
   date: String,
   questionnumber: Number,
   questiontext: String,
@@ -10,4 +10,4 @@ let PipingQuestionSchema = new Schema({
   facilityinfo: {type: Schema.Types.ObjectId, ref: 'FacilityInfo'}
 });
 
-module.exports = mongoose.model('PipingQuestion', PipingQuestionSchema);
+module.exports = mongoose.model('PipingInspection', PipingInspectionSchema);
