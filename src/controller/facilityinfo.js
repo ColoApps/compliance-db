@@ -219,7 +219,6 @@ api.put('/loadingareaproperties/:id/edit', (req, res) => {
 // //v1/loadingareaproperties/:id - DELETE - remove a loading Area
 api.delete('/loadingareaproperties/:id/:loadingareaid', (req, res) => {
   LoadingAreaProperties.findById(req.params.loadingareaid, (err, loadingareaproperties) => {
-    console.log(loadingareaproperties);
     if (err) {
       res.status(500).send(err);
       return;
@@ -240,7 +239,6 @@ api.delete('/loadingareaproperties/:id/:loadingareaid', (req, res) => {
   );
 
     FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
-      console.log(facilityinfo);
       if (err) {
         res.status(500).send(err);
         return;
@@ -251,9 +249,7 @@ api.delete('/loadingareaproperties/:id/:loadingareaid', (req, res) => {
       }
 
       var arraypostition =  facilityinfo.loadingareaproperties.indexOf(req.params.loadingareaid);
-      console.log(arraypostition);
       facilityinfo.loadingareaproperties.splice(arraypostition, 1);
-      console.log(facilityinfo.loadingareaproperties);
       facilityinfo.save(err => {
         if (err) {
           res.send(err);
@@ -319,6 +315,50 @@ api.post('/loadingrackproperties/add/:id', (req, res) => {
          res.json({ message: 'Loading Rack Properties saved' });
        });
      });
+  });
+});
+
+// //v1/loadingrackproperties/:id - DELETE - remove a loading rack
+api.delete('/loadingrackproperties/:id/:loadingrackid', (req, res) => {
+  LoadingRackProperties.findById(req.params.loadingrackid, (err, loadingrackproperties) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (loadingrackproperties === null) {
+      res.status(404).send("loading area not found")
+      return;
+    }
+    LoadingRackProperties.remove({
+      _id: req.params.loadingrackid
+    }, (err, loadingrackproperties) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      res.json({message: "Loading rack successufully removed."});
+    }
+  );
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (FacilityInfo === null) {
+        res.status(404).send("facility not found")
+        return;
+      }
+
+      var arraypostition =  facilityinfo.loadingrackproperties.indexOf(req.params.loadingrackid);
+      facilityinfo.loadingrackproperties.splice(arraypostition, 1);
+      facilityinfo.save(err => {
+        if (err) {
+          res.send(err);
+        }
+      //  res.json({ message: "loading area array updated."});
+      });
+    });
   });
 });
 
@@ -433,6 +473,51 @@ api.put('/spccplan/:id/edit', (req, res) => {
       }
   });
 });
+
+// //v1/spccplan/:id - DELETE - remove a spccplan
+api.delete('/spccplan/:id/:spccplanid', (req, res) => {
+  SPCCPlan.findById(req.params.spccplanid, (err, spccplan) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (spccplan === null) {
+      res.status(404).send("spccplan not found")
+      return;
+    }
+    SPCCPlan.remove({
+      _id: req.params.spccplanid
+    }, (err, spccplan) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      res.json({message: "spccplan successufully removed."});
+    }
+  );
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (FacilityInfo === null) {
+        res.status(404).send("facility not found")
+        return;
+      }
+
+      var arraypostition =  facilityinfo.spccplan.indexOf(req.params.spccplanid);
+      facilityinfo.spccplan.splice(arraypostition, 1);
+      facilityinfo.save(err => {
+        if (err) {
+          res.send(err);
+        }
+      //  res.json({ message: "loading area array updated."});
+      });
+    });
+  });
+});
+
 // ************ PreviousDischarge ***************
 
 // add previousdischarge
@@ -487,7 +572,6 @@ api.put('/previousdischarge/:id/edit', (req, res) => {
                 'volume': req.body.volume,
                'location': req.body.location}},
     {new: true}).exec(function(err, previousdischarge) {
-      console.log(previousdischarge);
       if (err) {
         res.send(err);
       } else if (previousdischarge != null) {
@@ -498,6 +582,51 @@ api.put('/previousdischarge/:id/edit', (req, res) => {
   });
 
 });
+
+// //v1/previousdischarge/:id - DELETE - remove a previous discharge
+api.delete('/previousdischarge/:id/:previousdischargeid', (req, res) => {
+  PreviousDischarge.findById(req.params.previousdischargeid, (err, previousdischarge) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (previousdischarge === null) {
+      res.status(404).send("previous discharge not found")
+      return;
+    }
+    PreviousDischarge.remove({
+      _id: req.params.previousdischargeid
+    }, (err, previousdischarge) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      res.json({message: "previous discharge successufully removed."});
+    }
+  );
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (FacilityInfo === null) {
+        res.status(404).send("facility not found")
+        return;
+      }
+
+      var arraypostition =  facilityinfo.previousdischarge.indexOf(req.params.previousdischargeid);
+      facilityinfo.previousdischarge.splice(arraypostition, 1);
+      facilityinfo.save(err => {
+        if (err) {
+          res.send(err);
+        }
+      //  res.json({ message: "loading area array updated."});
+      });
+    });
+  });
+});
+
 // ************ TankInfo ***************
 // add tankinfo
 //'/v1/facilityinfo/tankinfo/add'
@@ -582,6 +711,51 @@ api.put('/tankinfo/:id/edit', (req, res) => {
   });
 
 });
+
+// //v1/tankinfo/:id - DELETE - remove tank info
+api.delete('/tankinfo/:id/:tankinfoid', (req, res) => {
+  TankInfo.findById(req.params.tankinfoid, (err, tankinfo) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (tankinfo === null) {
+      res.status(404).send("tank info not found")
+      return;
+    }
+    TankInfo.remove({
+      _id: req.params.tankinfoid
+    }, (err, tankinfo) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      res.json({message: "tank info successufully removed."});
+    }
+  );
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (FacilityInfo === null) {
+        res.status(404).send("facility not found")
+        return;
+      }
+
+      var arraypostition =  facilityinfo.tankinfo.indexOf(req.params.tankinfoid);
+      facilityinfo.tankinfo.splice(arraypostition, 1);
+      facilityinfo.save(err => {
+        if (err) {
+          res.send(err);
+        }
+      //  res.json({ message: "loading area array updated."});
+      });
+    });
+  });
+});
+
 // ********** Containment ******************
 
 api.post('/containment/add/:id', (req, res) => {
@@ -694,6 +868,49 @@ api.put('/containment/:id/edit', (req, res) => {
   });
 });
 
+// //v1/containment/:id - DELETE - remove a containment
+api.delete('/containment/:id/:containmentid', (req, res) => {
+  Containment.findById(req.params.containmentid, (err, containment) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (containment === null) {
+      res.status(404).send("containment not found")
+      return;
+    }
+    Containment.remove({
+      _id: req.params.containmentid
+    }, (err, containment) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      res.json({message: "containment successufully removed."});
+    }
+  );
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (FacilityInfo === null) {
+        res.status(404).send("facility not found")
+        return;
+      }
+
+      var arraypostition =  facilityinfo.containment.indexOf(req.params.containmentid);
+      facilityinfo.containment.splice(arraypostition, 1);
+      facilityinfo.save(err => {
+        if (err) {
+          res.send(err);
+        }
+      //  res.json({ message: "loading area array updated."});
+      });
+    });
+  });
+});
   // ************ PipingInspection ***************
 
   // add pipinginspection
@@ -759,6 +976,54 @@ api.put('/containment/:id/edit', (req, res) => {
         }
     });
 
+  });
+
+  // //v1/pipinginspection/:id - DELETE - remove a pipe inspection
+  api.delete('/pipinginspection/:id/:pipinginspectionid', (req, res) => {
+    PipingInspection.findById(req.params.pipinginspectionid, (err, pipinginspection) => {
+      console.log(pipinginspection);
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (pipinginspection === null) {
+        res.status(404).send("piping inspection not found")
+        return;
+      }
+      PipingInspection.remove({
+        _id: req.params.pipinginspectionid
+      }, (err, pipinginspection) => {
+        if (err) {
+          res.status(500).send(err);
+          return;
+        }
+        res.json({message: "piping inspection successufully removed."});
+      }
+    );
+
+      FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+        console.log(facilityinfo);
+        if (err) {
+          res.status(500).send(err);
+          return;
+        }
+        if (FacilityInfo === null) {
+          res.status(404).send("facility not found")
+          return;
+        }
+
+        var arraypostition =  facilityinfo.pipinginspection.indexOf(req.params.pipinginspectionid);
+        console.log(arraypostition);
+        facilityinfo.pipinginspection.splice(arraypostition, 1);
+        console.log(facilityinfo.pipinginspection);
+        facilityinfo.save(err => {
+          if (err) {
+            res.send(err);
+          }
+        //  res.json({ message: "loading area array updated."});
+        });
+      });
+    });
   });
 
   // ************ MonthlyInspectionHeader ***************
@@ -827,6 +1092,80 @@ api.put('/containment/:id/edit', (req, res) => {
     });
   });
 
+  // //v1/monthlyinspectionheader/:id - DELETE - remove a monthly inspection
+  api.delete('/monthlyinspectionheader/:id/:monthlyinspectionheaderid', (req, res) => {
+    MonthlyInspectionHeader.findById(req.params.monthlyinspectionheaderid, (err, monthlyinspectionheader) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (monthlyinspectionheader === null) {
+        res.status(404).send("monthly inspection not found")
+        return;
+      }
+      MonthlyInspectionHeader.remove({
+        _id: req.params.monthlyinspectionheaderid
+        }, (err, monthlyinspectionheader) => {
+          console.log(monthlyinspectionheader);
+        if (err) {
+          res.status(500).send(err);
+          return;
+        }
+        //res.json({message: "deleted header mih"});
+      }
+      );
+
+    });
+
+    var resultsArray = [];
+    MonthlyInspectionResults.find({inspectionheaderID: req.params.monthlyinspectionheaderid}, (err, monthlyinspectionresults) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+
+      res.json(monthlyinspectionresults);
+
+      for (var i=0; i<monthlyinspectionresults.length; i++) {
+        resultsArray[i] = monthlyinspectionresults._id;
+      }
+    });
+
+    MonthlyInspectionResults.remove({inspectionheaderID: req.params.monthlyinspectionheaderid}, (err, review) => {
+        if (err) {
+        res.send(err);
+      }
+      // res.json({message: "Monthly Results Successfully Removed"});
+      });
+
+      FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+        if (err) {
+          res.status(500).send(err);
+          return;
+        }
+        if (FacilityInfo === null) {
+          res.status(404).send("facility not found")
+          return;
+        }
+
+        for (var i=0; i<resultsArray.length; i++) {
+          var arrayposition2 = facilityinfo.monthlyinspectionresults.indexOf(resultsArray[i]);
+          facilityinfo.monthlyinspectionresults.splice(arrayposition2, 1);
+          facilityinfo.save(err => {
+            res.send(err);
+          });
+        }
+
+        var arraypostition =  facilityinfo.monthlyinspectionheader.indexOf(req.params.monthlyinspectionheaderid);
+        facilityinfo.monthlyinspectionheader.splice(arraypostition, 1);
+        facilityinfo.save(err => {
+          if (err) {
+            res.send(err);
+          }
+        });
+    });
+  });
+
   // ************ MonthlyInspectionResults ***************
 
   // add monthlyinspectionresults
@@ -891,7 +1230,6 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
     }
   });
 
-
 // put monthlyinspectionresults
 // '/v1/monthlyinspectionresults/:id '
   api.put('/monthlyinspectionresults/:id/edit', (req, res) => {
@@ -913,6 +1251,52 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
         }
     });
   });
+
+  // //v1/monthlyinspectionresults/:id - DELETE - remove inspection results
+  api.delete('/monthlyinspectionresults/:id/:monthlyinspectionresultsid', (req, res) => {
+    MonthlyInspectionResults.findById(req.params.monthlyinspectionresultsid, (err, monthlyinspectionresults) => {
+      console.log(monthlyinspectionresults);
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (monthlyinspectionresults === null) {
+        res.status(404).send("monthlyinspectionresults not found")
+        return;
+      }
+      MonthlyInspectionResults.remove({
+        _id: req.params.monthlyinspectionresultsid
+      }, (err, monthlyinspectionresults) => {
+        if (err) {
+        res.status(500).send(err);
+        return;
+        }
+        res.json({message: "Monthly Results Successfully Removed"});
+      }
+    );
+
+      FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+        if (err) {
+          res.status(500).send(err);
+          return;
+        }
+        if (FacilityInfo === null) {
+          res.status(404).send("facility not found")
+          return;
+        }
+
+          var arrayposition = facilityinfo.monthlyinspectionresults.indexOf(req.params.monthlyinspectionresultsid);
+          console.log(arrayposition);
+          facilityinfo.monthlyinspectionresults.splice(arrayposition, 1);
+          facilityinfo.save(err => {
+            if (err) {
+              res.send(err);
+            }
+          });
+      });
+    }
+  );
+});
 
   // ************ AnnualInspectionHeader ***************
 
@@ -977,6 +1361,80 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
         } else {
           res.send('annualinspectionheader not found');
         }
+    });
+  });
+
+  //v1/facilityinfo/annualinspectionheader/:id/:annualinspectionheaderid - remove an anuual inspection
+  api.delete('/annualinspectionheader/:id/:annualinspectionheaderid', (req, res) => {
+    AnnualInspectionHeader.findById(req.params.annualinspectionheaderid, (err, annualinspectionheader) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (annualinspectionheader === null) {
+        res.status(404).send("annual inspection not found")
+        return;
+      }
+      AnnualInspectionHeader.remove({
+        _id: req.params.annualinspectionheaderid
+        }, (err, annualinspectionheader) => {
+          console.log(annualinspectionheader);
+        if (err) {
+          res.status(500).send(err);
+          return;
+        }
+        //res.json({message: "deleted header mih"});
+      }
+      );
+
+    });
+
+    var resultsArray = [];
+    AnnualInspectionResults.find({inspectionheaderID: req.params.annualinspectionheaderid}, (err, annualinspectionresults) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+
+      res.json(annualinspectionresults);
+
+      for (var i=0; i<annualinspectionresults.length; i++) {
+        resultsArray[i] = annualinspectionresults._id;
+      }
+    });
+
+    AnnualInspectionResults.remove({inspectionheaderID: req.params.annualinspectionheaderid}, (err, review) => {
+        if (err) {
+        res.send(err);
+      }
+      // res.json({message: "Annual Results Successfully Removed"});
+      });
+
+      FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+        if (err) {
+          res.status(500).send(err);
+          return;
+        }
+        if (FacilityInfo === null) {
+          res.status(404).send("facility not found")
+          return;
+        }
+
+        for (var i=0; i<resultsArray.length; i++) {
+          var arrayposition2 = facilityinfo.annualinspectionresults.indexOf(resultsArray[i]);
+          facilityinfo.annualinspectionresults.splice(arrayposition2, 1);
+          facilityinfo.save(err => {
+            res.send(err);
+          });
+        }
+
+        var arraypostition =  facilityinfo.annualinspectionheader.indexOf(req.params.annualinspectionheaderid);
+        facilityinfo.annualinspectionheader.splice(arraypostition, 1);
+        facilityinfo.save(err => {
+          if (err) {
+            res.send(err);
+          }
+        });
     });
   });
 
@@ -1066,6 +1524,52 @@ api.get('/annualinspectionresults/:id/:byfacility/:byheader', (req, res) => {
         }
     });
   });
+
+  // //v1/annualinspectionresults/:id - DELETE - remove inspection results
+  api.delete('/annualinspectionresults/:id/:annualinspectionresultsid', (req, res) => {
+    AnnualInspectionResults.findById(req.params.annualinspectionresultsid, (err, annualinspectionresults) => {
+      console.log(annualinspectionresults);
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (annualinspectionresults === null) {
+        res.status(404).send("annualinspectionresults not found")
+        return;
+      }
+      AnnualInspectionResults.remove({
+        _id: req.params.annualinspectionresultsid
+      }, (err, annualinspectionresults) => {
+        if (err) {
+        res.status(500).send(err);
+        return;
+        }
+        res.json({message: "Annual Results Successfully Removed"});
+      }
+    );
+
+      FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+        if (err) {
+          res.status(500).send(err);
+          return;
+        }
+        if (FacilityInfo === null) {
+          res.status(404).send("facility not found")
+          return;
+        }
+
+          var arrayposition = facilityinfo.annualinspectionresults.indexOf(req.params.annualinspectionresultsid);
+          console.log(arrayposition);
+          facilityinfo.annualinspectionresults.splice(arrayposition, 1);
+          facilityinfo.save(err => {
+            if (err) {
+              res.send(err);
+            }
+          });
+      });
+    }
+  );
+});
 
 return api;
 
