@@ -35,6 +35,8 @@ let FacilityInfoSchema = new Schema ({
     days: String
   },
 
+  storagelocation: [{type: Schema.Types.ObjectId, ref: 'StorageLocation'}],
+  
   tankinfo: [{type: Schema.Types.ObjectId, ref: 'TankInfo'}],
 
   containment: [{type: Schema.Types.ObjectId, ref: 'Containment'}],

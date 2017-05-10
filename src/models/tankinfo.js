@@ -4,6 +4,8 @@ let Schema = mongoose.Schema;
 
 let TankInfoSchema = new Schema ({
   facilityinfo: {type: Schema.Types.ObjectId, ref: 'FacilityInfo'},
+  storagelocationid: String,
+  storagelocation: String, 
   category: String,
   tankdesc: String,
   capacity: Number,

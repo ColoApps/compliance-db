@@ -12,6 +12,7 @@ import MonthlyInspectionHeader from '../models/monthlyinspectionheader';
 import AnnualInspectionHeader from '../models/annualinspectionheader';
 import MonthlyInspectionResults from '../models/monthlyinspectionresults';
 import AnnualInspectionResults from '../models/annualinspectionresults';
+import StorageLocation from '../models/storagelocation';
 
 export default({config, db }) => {
   let api = Router();
@@ -617,6 +618,118 @@ api.delete('/previousdischarge/:id/:previousdischargeid', (req, res) => {
 
       var arraypostition =  facilityinfo.previousdischarge.indexOf(req.params.previousdischargeid);
       facilityinfo.previousdischarge.splice(arraypostition, 1);
+      facilityinfo.save(err => {
+        if (err) {
+          res.send(err);
+        }
+      //  res.json({ message: "loading area array updated."});
+      });
+    });
+  });
+});
+
+// ************ StorageLocation ***************
+
+// add storagelocation
+//'/v1/facilityinfo/storagelocation/add/:id''
+
+api.post('/storagelocation/add/:id', (req, res) => {
+  FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+    console.log(req.params);
+    if (err) {
+      res.send(err);
+    }
+    let newStorageLocation = StorageLocation();
+     newStorageLocation.name = req.body.name;
+     newStorageLocation.description = req.body.description;
+     newStorageLocation.comment = req.body.comment;
+     newStorageLocation.facilityinfo = facilityinfo._id;
+     newStorageLocation.save((err, storagelocation) => {
+       if (err) {
+         res.send(err);
+       }
+       facilityinfo.storagelocation.push(newStorageLocation);
+       facilityinfo.save(err => {
+         if (err) {
+           res.send(err);
+
+         }
+         res.json({ message: 'StorageLocation saved' });
+       });
+     });
+  });
+});
+
+// get storagelocation - specific
+// '/v1/storagelocation/:id - get by facility'
+api.get('/storagelocation/:id', (req, res) => {
+  console.log('inside get storagelocation');
+  StorageLocation.find({facilityinfo: req.params.id}, (err, storagelocation) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (storagelocation === null) {
+      res.status(404).send("storagelocation not found")
+      return;
+    }
+    res.json(storagelocation);
+  });
+});
+
+api.put('/storagelocation/:id/edit', (req, res) => {
+  console.log(req.params.id);
+
+  StorageLocation.findOneAndUpdate({'_id': req.params.id},
+    { "$set": {'name': req.body.name,
+                'description': req.body.description,
+               'comment': req.body.comment}},
+    {new: true}).exec(function(err, storagelocation) {
+      if (err) {
+        res.send(err);
+      } else if (storagelocation != null) {
+        res.json ({ message: 'storagelocation saved' });
+      } else {
+        res.send('storagelocation not found');
+      }
+  });
+
+});
+
+// //v1/storagelocation/:id - DELETE - remove a storagelocation
+api.delete('/storagelocation/:id/:storagelocationid', (req, res) => {
+  StorageLocation.findById(req.params.storagelocationid, (err, storagelocation) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (storagelocation === null) {
+      res.status(404).send("storagelocation not found")
+      return;
+    }
+    StorageLocation.remove({
+      _id: req.params.storagelocationid
+    }, (err, storagelocation) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      res.json({message: "storagelocation successufully removed."});
+    }
+  );
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (FacilityInfo === null) {
+        res.status(404).send("facility not found")
+        return;
+      }
+
+      var arraypostition =  facilityinfo.storagelocation.indexOf(req.params.storagelocationid);
+      facilityinfo.storagelocation.splice(arraypostition, 1);
       facilityinfo.save(err => {
         if (err) {
           res.send(err);
