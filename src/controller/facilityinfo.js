@@ -13,6 +13,7 @@ import AnnualInspectionHeader from '../models/annualinspectionheader';
 import MonthlyInspectionResults from '../models/monthlyinspectionresults';
 import AnnualInspectionResults from '../models/annualinspectionresults';
 import StorageLocation from '../models/storagelocation';
+import BusinessHours from '../models/businesshours';
 
 export default({config, db }) => {
   let api = Router();
@@ -42,10 +43,11 @@ api.post('/add', (req, res) => {
   newFacilityInfo.geometry.coordinates = req.body.geometry.coordinates;
   //newFacilityInfo.geometry.coordinates.long = req.body.geometry.coordinates.long;
 
+  newFacilityInfo.EPARegion = req.body.EPARegion;
+  newFacilityInfo.stateoverride = req.body.stateoverride;
+  newFacilityInfo.statetext = req.body.statetext;
+
   newFacilityInfo.businesstype = req.body.businesstype;
-  newFacilityInfo.beghours = req.body.beghours;
-  newFacilityInfo.endhours = req.body.endhours;
-  newFacilityInfo.schedule = req.body.schedule;
 
   newFacilityInfo.security.twentyfourhours = req.body.twentyfourhours;
   newFacilityInfo.security.beghours = req.body.security.beghours;
@@ -118,10 +120,11 @@ api.put('/:id', (req, res) => {
     facilityinfo.geometry.coordinates = req.body.geometry.coordinates;
     //facilityinfo.geometry.coordinates = req.body.geometry.coordinates.long;
 
+    facilityinfo.EPARegion = req.body.EPARegion;
+    facilityinfo.stateoverride = req.body.stateoverride;
+    facilityinfo.statetext = req.body.statetext;
+
     facilityinfo.businesstype = req.body.businesstype;
-    facilityinfo.beghours = req.body.beghours;
-    facilityinfo.endhours = req.body.endhours;
-    facilityinfo.schedule = req.body.schedule;
 
     facilityinfo.security.twentyfourhours = req.body.twentyfourhours;
     facilityinfo.security.beghours = req.body.security.beghours;
@@ -380,17 +383,17 @@ api.delete('/loadingrackproperties/:id/:loadingrackid', (req, res) => {
      newSPCCPlan.drps1.name = req.body.drps1.name;
      newSPCCPlan.drps1.title = req.body.drps1.title;
      newSPCCPlan.drps1.phone = req.body.drps1.phone;
-     newSPCCPlan.drps1.locofplan = req.body.drps1.locofplan;
 
      newSPCCPlan.drps2.name = req.body.drps2.name;
      newSPCCPlan.drps2.title = req.body.drps2.title;
      newSPCCPlan.drps2.phone = req.body.drps2.phone;
-     newSPCCPlan.drps2.locofplan = req.body.drps2.locofplan;
 
      newSPCCPlan.drps3.name = req.body.drps3.name;
      newSPCCPlan.drps3.title = req.body.drps3.title;
      newSPCCPlan.drps3.phone = req.body.drps3.phone;
-     newSPCCPlan.drps3.locofplan = req.body.drps3.locofplan;
+
+     newSPCCPlan.locofplan[1] = req.body.locofplan1;
+     newSPCCPlan.locofplan[2] = req.body.locofplan2;
 
      newSPCCPlan.question1.text = req.body.question1.text;
      newSPCCPlan.question1.answer = req.body.question1.answer;
@@ -643,6 +646,14 @@ api.post('/storagelocation/add/:id', (req, res) => {
      newStorageLocation.name = req.body.name;
      newStorageLocation.description = req.body.description;
      newStorageLocation.comment = req.body.comment;
+     newStorageLocation.directionofflow = req.body.directionofflow;
+     newStorageLocation.surfacematerial = req.body.surfacematerial;
+     newStorageLocation.lights = req.body.lights;
+     newStorageLocation.lightloc = req.body.lightloc;
+     newStorageLocation.fencing = req.body.fencing;
+     newStorageLocation.fencingloc = req.body.fencingloc;
+     newStorageLocation.camera = req.body.camera;
+     newStorageLocation.cameraloc = req.body.cameraloc;
      newStorageLocation.facilityinfo = facilityinfo._id;
      newStorageLocation.save((err, storagelocation) => {
        if (err) {
@@ -683,7 +694,16 @@ api.put('/storagelocation/:id/edit', (req, res) => {
   StorageLocation.findOneAndUpdate({'_id': req.params.id},
     { "$set": {'name': req.body.name,
                 'description': req.body.description,
-               'comment': req.body.comment}},
+                'comment': req.body.comment,
+                'directionofflow': req.body.directionofflow,
+                'surfacematerial': req.body.surfacematerial,
+                'lights': req.body.lights,
+                'lightloc': req.body.lightloc,
+                'fencing': req.body.fencing,
+                'fencingloc': req.body.fencingloc,
+                'camera': req.body.camera,
+                'cameraloc': req.body.cameraloc
+              }},
     {new: true}).exec(function(err, storagelocation) {
       if (err) {
         res.send(err);

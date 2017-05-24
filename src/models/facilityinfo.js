@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import SPCCPlan from './spccplan';
 let Schema = mongoose.Schema;
 
 let FacilityInfoSchema = new Schema ({
@@ -24,10 +23,13 @@ let FacilityInfoSchema = new Schema ({
     type: { type: String, default: 'Point' },
     coordinates: [Number]
 },
+  EPARegion: String,
+  stateoverride: Boolean,
+  statetext: String,
+
   businesstype: String,
-  beghours: String,
-  endhours: String,
-  schedule: String,
+  hours: [{type: Schema.Types.ObjectId, ref: 'BusinessHours'}],
+
   security: {
     twentyfourhours: Boolean,
     beghours: String,
@@ -36,7 +38,7 @@ let FacilityInfoSchema = new Schema ({
   },
 
   storagelocation: [{type: Schema.Types.ObjectId, ref: 'StorageLocation'}],
-  
+
   tankinfo: [{type: Schema.Types.ObjectId, ref: 'TankInfo'}],
 
   containment: [{type: Schema.Types.ObjectId, ref: 'Containment'}],

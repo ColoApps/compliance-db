@@ -14,23 +14,22 @@ let SPCCPlanSchema = new Schema({
     name: String,
     title: String,
     phone: String,
-    locofplan: String,
     alternate: Boolean
   },
   drps2:  {
     name: String,
     title: String,
     phone: String,
-    locofplan: String,
     alternate: Boolean
   },
   drps3:  {
     name: String,
     title: String,
     phone: String,
-    locofplan: String,
     alternate: Boolean
   },
+
+  locofplan: [String],
 
   totalsitecapacity: Number,
 

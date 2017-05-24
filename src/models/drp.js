@@ -6,7 +6,6 @@ let DRPSchema = new Schema({
   name: String,
   title: String,
   phone: String,
-  locofplan: String,
   alternate: Boolean,
   spccplan: {type: Schema.Types.ObjectId, ref: 'SPCCPlan'}
 });
