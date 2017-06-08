@@ -15,6 +15,8 @@ import AnnualInspectionResults from '../models/annualinspectionresults';
 import StorageLocation from '../models/storagelocation';
 import BusinessHours from '../models/businesshours';
 
+import { authenticate } from '../middleware/authMiddleware';
+
 export default({config, db }) => {
   let api = Router();
   var mongoose = require('mongoose');
@@ -24,7 +26,7 @@ export default({config, db }) => {
 // **********FacilityInfo***************
 
   //'/v1/facilityinfo/add'
-api.post('/add', (req, res) => {
+api.post('/add', authenticate,(req, res) => {
   console.log('inside facility post');
   let newFacilityInfo = new FacilityInfo();
   newFacilityInfo.facilityname = req.body.facilityname;

@@ -2,8 +2,6 @@ import express from 'express';
 import config from '../config';
 import middleware from '../middleware';
 import initializeDb from '../db';
-import facilityinfo from '../controller/facilityinfo';
-//import spccplan from '../controller/spccplan';
 import schedule from '../controller/schedule';
 import questiontext from '../controller/questiontext';
 import pipingquestiontext from '../controller/pipingquestiontext';
@@ -18,6 +16,8 @@ import treatmentfacility from '../controller/treatmentfacility';
 import surfacematerial from '../controller/surfacematerial';
 import containmentmaterial from '../controller/containmentmaterial';
 import tankcategory from '../controller/tankcategory';
+import facilityinfo from '../controller/facilityinfo';
+import account from '../controller/account';
 
 let router = express();
 
@@ -28,8 +28,7 @@ initializeDb(db => {
   router.use(middleware({ config, db }));
 
   // api routes v1 (/v1)
-  router.use('/facilityinfo', facilityinfo({ config, db }));
-  //router.use('/spccplan', spccplan({ config, db }));
+
   router.use('/schedule', schedule({ config, db }));
   router.use('/questiontext', questiontext({ config, db }));
   router.use('/pipingquestiontext', pipingquestiontext({ config, db }));
@@ -44,6 +43,8 @@ initializeDb(db => {
   router.use('/surfacematerial', surfacematerial({ config, db }));
   router.use('/containmentmaterial', containmentmaterial({ config, db }));
   router.use('/tankcategory', tankcategory({ config, db }));
+  router.use('/account', account({ config, db}));
+  router.use('/facilityinfo', facilityinfo({ config, db}));
 });
 
 export default router;

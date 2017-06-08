@@ -3,6 +3,8 @@ import { Router } from 'express';
 import Schedule from '../models/schedule';
 import config from '../config';
 
+import { authenticate } from '../middleware/authMiddleware';
+
 export default ({config, db}) => {
   let api = Router();
 

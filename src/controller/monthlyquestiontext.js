@@ -3,6 +3,8 @@ import { Router } from 'express';
 import MonthlyQuestionText from '../models/monthlyquestiontext';
 import config from '../config';
 
+import {generateAccessToken, respond, authenticate} from '../middleware/authMiddleware';
+
 export default ({config, db}) => {
   let api = Router();
 

@@ -4,6 +4,7 @@ import SPCCPlan from '../models/spccplan';
 import FacilityInfo from '../models/facilityinfo'
 import bodyParser from 'body-parser';
 
+import { authenticate } from '../middleware/authMiddleware';
 
 export default({config, db}) => {
   let api = Router();

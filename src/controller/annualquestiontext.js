@@ -3,11 +3,13 @@ import { Router } from 'express';
 import AnnualQuestionText from '../models/annualquestiontext';
 import config from '../config';
 
+import {generateAccessToken, respond, authenticate} from '../middleware/authMiddleware';
+
 export default ({config, db}) => {
   let api = Router();
 
   // 'v1/annualquestiontext/add'
-  api.post('/add', (req, res) => {
+  api.post('/add', authenticate, (req, res) => {
     console.log('inside pqt post');
     let newAnnualQuestionText = new AnnualQuestionText();
     newAnnualQuestionText.questionnumber = req.body.questionnumber;

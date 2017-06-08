@@ -3,6 +3,8 @@ import { Router } from 'express';
 import TankCategory from '../models/tankcategory';
 import config from '../config';
 
+import { authenticate } from '../middleware/authMiddleware';
+
 export default ({config, db}) => {
   let api = Router();
 

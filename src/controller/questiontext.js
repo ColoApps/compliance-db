@@ -3,6 +3,8 @@ import { Router } from 'express';
 import QuestionText from '../models/questiontext';
 import config from '../config';
 
+import { authenticate } from '../middleware/authMiddleware';
+
 export default ({config, db}) => {
   let api = Router();
 
