@@ -17,6 +17,7 @@ import surfacematerial from '../controller/surfacematerial';
 import containmentmaterial from '../controller/containmentmaterial';
 import tankcategory from '../controller/tankcategory';
 import facilityinfo from '../controller/facilityinfo';
+import dischargepointtype from '../controller/dischargepointtype';
 import account from '../controller/account';
 
 let router = express();
@@ -45,6 +46,7 @@ initializeDb(db => {
   router.use('/tankcategory', tankcategory({ config, db }));
   router.use('/account', account({ config, db}));
   router.use('/facilityinfo', facilityinfo({ config, db}));
+  router.use('/dischargepointtype', dischargepointtype({ config, db }));
 });
 
 export default router;

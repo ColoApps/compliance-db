@@ -177,6 +177,8 @@ api.post('/loadingareaproperties/add/:id', (req, res) => {
     let newLoadingAreaProperties = LoadingAreaProperties();
      newLoadingAreaProperties.surfacematerial = req.body.surfacematerial;
      newLoadingAreaProperties.directionofflow = req.body.directionofflow;
+     newLoadingAreaProperties.containmentflag = req.body.containmentflag;
+     newLoadingAreaProperties.contaiment = req.body.containment;
      newLoadingAreaProperties.facilityinfo = facilityinfo._id;
      newLoadingAreaProperties.save((err, loadingareaproperties) => {
        if (err) {
@@ -209,7 +211,9 @@ api.put('/loadingareaproperties/:id/edit', (req, res) => {
 
   LoadingAreaProperties.findOneAndUpdate({'_id': req.params.id},
     { "$set": {'surfacematerial': req.body.surfacematerial,
-               'directionofflow': req.body.directionofflow}},
+               'directionofflow': req.body.directionofflow,
+               'containmentflag': req.body.containmentflag,
+               'containment': req.body.containment}},
     {new: true}).exec(function(err, loadingareaproperties) {
       console.log(loadingareaproperties);
       if (err) {
@@ -273,7 +277,9 @@ api.put('/loadingrackproperties/:id/edit', (req, res) => {
 
   LoadingRackProperties.findOneAndUpdate({'_id': req.params.id},
     { "$set": {'surfacematerial': req.body.surfacematerial,
-               'directionofflow': req.body.directionofflow}},
+               'directionofflow': req.body.directionofflow,
+               'containmentflag': req.body.containmentflag,
+               'containment': req.body.containment}},
     {new: true}).exec(function(err, loadingrackproperties) {
       console.log(loadingrackproperties);
       if (err) {
@@ -308,6 +314,8 @@ api.post('/loadingrackproperties/add/:id', (req, res) => {
     let newLoadingRackProperties = LoadingRackProperties();
      newLoadingRackProperties.surfacematerial = req.body.surfacematerial;
      newLoadingRackProperties.directionofflow = req.body.directionofflow;
+     newLoadingRackProperties.containmentflag = req.body.containmentflag;
+     newLoadingRackProperties.containment = req.body.containment;
      newLoadingRackProperties.facilityinfo = facilityinfo._id;
      newLoadingRackProperties.save((err, loadingrackproperties) => {
        if (err) {
@@ -648,14 +656,9 @@ api.post('/storagelocation/add/:id', (req, res) => {
      newStorageLocation.name = req.body.name;
      newStorageLocation.description = req.body.description;
      newStorageLocation.comment = req.body.comment;
-     newStorageLocation.directionofflow = req.body.directionofflow;
-     newStorageLocation.surfacematerial = req.body.surfacematerial;
      newStorageLocation.lights = req.body.lights;
      newStorageLocation.lightloc = req.body.lightloc;
-     newStorageLocation.fencing = req.body.fencing;
-     newStorageLocation.fencingloc = req.body.fencingloc;
-     newStorageLocation.camera = req.body.camera;
-     newStorageLocation.cameraloc = req.body.cameraloc;
+     newStorageLocation.material = req.body.camera;
      newStorageLocation.facilityinfo = facilityinfo._id;
      newStorageLocation.save((err, storagelocation) => {
        if (err) {
@@ -697,14 +700,9 @@ api.put('/storagelocation/:id/edit', (req, res) => {
     { "$set": {'name': req.body.name,
                 'description': req.body.description,
                 'comment': req.body.comment,
-                'directionofflow': req.body.directionofflow,
-                'surfacematerial': req.body.surfacematerial,
                 'lights': req.body.lights,
                 'lightloc': req.body.lightloc,
-                'fencing': req.body.fencing,
-                'fencingloc': req.body.fencingloc,
-                'camera': req.body.camera,
-                'cameraloc': req.body.cameraloc
+                'material': req.body.material
               }},
     {new: true}).exec(function(err, storagelocation) {
       if (err) {
@@ -907,25 +905,32 @@ api.post('/containment/add/:id', (req, res) => {
      newContainment.length = req.body.length;
      newContainment.width = req.body.width;
      newContainment.height = req.body.height;
+     newContainment.floordrain = req.body.floordrain;
+     newContainment.oilwaterseparator = req.body.oilwaterseparator;
+     newContainment.dischargepointtype = req.body.dischargepointtype;
 
      newContainment.drainpipesexist = req.body.drainpipesexist;
 
      newContainment.pipe1properties.valved = req.body.pipe1properties.valved;
+     newContainment.pipe1properties.locks = req.body.pipe1properties.locks;
      newContainment.pipe1properties.capped = req.body.pipe1properties.capped;
      newContainment.pipe1properties.open = req.body.pipe1properties.open;
      newContainment.pipe1properties.location = req.body.pipe1properties.location;
 
      newContainment.pipe2properties.valved = req.body.pipe2properties.valved;
+     newContainment.pipe2properties.locks = req.body.pipe2properties.locks;
      newContainment.pipe2properties.capped = req.body.pipe2properties.capped;
      newContainment.pipe2properties.open = req.body.pipe2properties.open;
      newContainment.pipe2properties.location = req.body.pipe2properties.location;
 
      newContainment.pipe3properties.valved = req.body.pipe3properties.valved;
+     newContainment.pipe3properties.locks = req.body.pipe3properties.locks;
      newContainment.pipe3properties.capped = req.body.pipe3properties.capped;
      newContainment.pipe3properties.open = req.body.pipe3properties.open;
      newContainment.pipe3properties.location = req.body.pipe3properties.location;
 
      newContainment.pipe4properties.valved = req.body.pipe4properties.valved;
+     newContainment.pipe4properties.locks = req.body.pipe4properties.locks;
      newContainment.pipe4properties.capped = req.body.pipe4properties.capped;
      newContainment.pipe4properties.open = req.body.pipe4properties.open;
      newContainment.pipe4properties.location = req.body.pipe4properties.location;
@@ -968,19 +973,25 @@ api.put('/containment/:id/edit', (req, res) => {
                 'length': req.body.length,
                 'width': req.body.width,
                 'height': req.body.height,
+                'floordrain': req.body.floordrain,
+                'oilwaterseparator': req.body.oilwaterseparator,
                 'drainpipesexist': req.body.material,
 
+
                 'pipe1properties.valved': req.body.pipe1properties.valved,
+                'pipe1properties.locks': req.body.pipe1properties.locks,
                 'pipe1properties.capped': req.body.pipe1properties.capped,
                 'pipe1properties.open': req.body.pipe1properties.open,
                 'pipe1properties.location': req.body.pipe1properties.location,
 
                 'pipe2properties.valved': req.body.pipe2properties.valved,
+                'pipe2properties.locks': req.body.pipe2properties.locks,
                 'pipe2properties.capped': req.body.pipe2properties.capped,
                 'pipe2properties.open': req.body.pipe2properties.open,
                 'pipe2properties.location': req.body.pipe2properties.location,
 
                 'pipe3properties.valved': req.body.pipe3properties.valved,
+                'pipe3properties.locks': req.body.pipe3properties.locks,
                 'pipe3properties.capped': req.body.pipe3properties.capped,
                 'pipe3properties.open': req.body.pipe3properties.open,
                 'pipe3properties.location': req.body.pipe3properties.location,
