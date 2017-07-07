@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 let Schema = mongoose.Schema;
 
-let BusinessHoursSchema = new Schema ({
+let SecuritySchema = new Schema ({
   twentyfourhours: Boolean,
   schedule: String,
   beghours: String,
@@ -9,4 +9,4 @@ let BusinessHoursSchema = new Schema ({
   facilityinfo: {type: Schema.Types.ObjectId, ref: 'FacilityInfo'}
 });
 
-module.exports = mongoose.model('BusinessHours', BusinessHoursSchema);
+module.exports = mongoose.model('Security', SecuritySchema);

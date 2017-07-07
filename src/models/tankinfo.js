@@ -5,7 +5,7 @@ let Schema = mongoose.Schema;
 let TankInfoSchema = new Schema ({
   facilityinfo: {type: Schema.Types.ObjectId, ref: 'FacilityInfo'},
   storagelocationid: String,
-  storagelocation: String, 
+  storagelocation: String,
   category: String,
   tankdesc: String,
   capacity: Number,
@@ -18,6 +18,7 @@ let TankInfoSchema = new Schema ({
   eft: Boolean,
   type: String,
   partiallyburied: Boolean,
+  directionofflow: String,
   registered: Boolean
 
 })

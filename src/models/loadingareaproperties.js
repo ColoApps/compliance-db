@@ -5,7 +5,7 @@ let LoadingAreaProperties = new Schema ({
   surfacematerial: String,
   directionofflow: String,
   containmentflag: Boolean,
-  containment:{type: Schema.Types.ObjectId, ref: "Containment"},
+  containmentid: String,
   facilityinfo: {type: Schema.Types.ObjectId, ref: 'FacilityInfo'}
 });
 

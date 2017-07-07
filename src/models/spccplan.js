@@ -29,7 +29,8 @@ let SPCCPlanSchema = new Schema({
     alternate: Boolean
   },
 
-  locofplan: [String],
+  locofplan1: String,
+  locofplan2: String,
 
   totalsitecapacity: Number,
 

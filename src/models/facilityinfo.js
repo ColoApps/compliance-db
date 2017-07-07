@@ -21,21 +21,21 @@ let FacilityInfoSchema = new Schema ({
   facilitydescription: String,
   geometry: {
     type: { type: String, default: 'Point' },
-    coordinates: [Number]
+    coordinates: {
+      lat: Number,
+      long: Number
+    }
 },
   EPARegion: String,
   stateoverride: Boolean,
   statetext: String,
 
   businesstype: String,
-  hours: [{type: Schema.Types.ObjectId, ref: 'BusinessHours'}],
+  businesshours: [{type: Schema.Types.ObjectId, ref: 'BusinessHours'}],
 
-  security: {
-    twentyfourhours: Boolean,
-    beghours: String,
-    endhours: String,
-    days: String
-  },
+  securityexists: Boolean,
+
+  security: [{type: Schema.Types.ObjectId, ref: 'Security'}],
 
   storagelocation: [{type: Schema.Types.ObjectId, ref: 'StorageLocation'}],
 

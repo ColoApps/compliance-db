@@ -14,6 +14,7 @@ import MonthlyInspectionResults from '../models/monthlyinspectionresults';
 import AnnualInspectionResults from '../models/annualinspectionresults';
 import StorageLocation from '../models/storagelocation';
 import BusinessHours from '../models/businesshours';
+import Security from '../models/security';
 
 import { authenticate } from '../middleware/authMiddleware';
 
@@ -26,42 +27,36 @@ export default({config, db }) => {
 // **********FacilityInfo***************
 
   //'/v1/facilityinfo/add'
-api.post('/add', authenticate,(req, res) => {
+//api.post('/add', authenticate,(req, res) => {
+  api.post('/add', (req, res) => {
   console.log('inside facility post');
   let newFacilityInfo = new FacilityInfo();
   newFacilityInfo.facilityname = req.body.facilityname;
-  newFacilityInfo.facilityaddress.street = req.body.facilityaddress.street;
-  newFacilityInfo.facilityaddress.city = req.body.facilityaddress.city;
-  newFacilityInfo.facilityaddress.state = req.body.facilityaddress.state;
-  newFacilityInfo.facilityaddress.zipcode = req.body.facilityaddress.zipcode;
+  newFacilityInfo.facilityaddress.street = req.body.facilityaddress.facilitystreet;
+  newFacilityInfo.facilityaddress.city = req.body.facilityaddress.facilitycity;
+  newFacilityInfo.facilityaddress.state = req.body.facilityaddress.facilitystate;
+  newFacilityInfo.facilityaddress.zipcode = req.body.facilityaddress.facilityzipcode;
 
   newFacilityInfo.facilityowner = req.body.facilityowner;
-  newFacilityInfo.owneraddress.street = req.body.owneraddress.street;
-  newFacilityInfo.owneraddress.city = req.body.owneraddress.city;
-  newFacilityInfo.owneraddress.state = req.body.owneraddress.state;
-  newFacilityInfo.owneraddress.zipcode = req.body.owneraddress.zipcode;
+  newFacilityInfo.owneraddress.street = req.body.owneraddress.ownertreet;
+  newFacilityInfo.owneraddress.city = req.body.owneraddress.ownercity;
+  newFacilityInfo.owneraddress.state = req.body.owneraddress.ownerstate;
+  newFacilityInfo.owneraddress.zipcode = req.body.owneraddress.ownerzipcode;
 
   newFacilityInfo.facilitydescription = req.body.facilitydescription;
-  newFacilityInfo.geometry.coordinates = req.body.geometry.coordinates;
-  //newFacilityInfo.geometry.coordinates.long = req.body.geometry.coordinates.long;
+  newFacilityInfo.geometry.coordinates.lat = req.body.geometry.coordinates.lat;
+  newFacilityInfo.geometry.coordinates.long = req.body.geometry.coordinates.long;
 
   newFacilityInfo.EPARegion = req.body.EPARegion;
   newFacilityInfo.stateoverride = req.body.stateoverride;
   newFacilityInfo.statetext = req.body.statetext;
 
   newFacilityInfo.businesstype = req.body.businesstype;
-
-  newFacilityInfo.security.twentyfourhours = req.body.twentyfourhours;
-  newFacilityInfo.security.beghours = req.body.security.beghours;
-  newFacilityInfo.security.endhours = req.body.security.endhours;
-  newFacilityInfo.security.days = req.body.security.days;
+  newFacilityInfo.securityexists = req.body.securityexists;
 
   newFacilityInfo.loadingareaexists = req.body.loadingareaexists;
 
   newFacilityInfo.loadingracksexists = req.body.loadingracksexists;
-  newFacilityInfo.loadingrackproperties.racknumber = req.body.loadingrackproperties.racknumber;
-  newFacilityInfo.loadingrackproperties.surfacematerial = req.body.loadingrackproperties.surfacematerial;
-  newFacilityInfo.loadingrackproperties.directionofflow = req.body.loadingrackproperties.directionofflow;
 
   newFacilityInfo.loadingoperations.exists = req.body.loadingoperations.exists;
   newFacilityInfo.loadingoperations.specific = req.body.loadingoperations.specific;
@@ -107,31 +102,27 @@ api.put('/:id', (req, res) => {
       res.send(err);
     }
     facilityinfo.facilityname = req.body.facilityname;
-    facilityinfo.facilityaddress.street = req.body.facilityaddress.street;
-    facilityinfo.facilityaddress.city = req.body.facilityaddress.city;
-    facilityinfo.facilityaddress.state = req.body.facilityaddress.state;
-    facilityinfo.facilityaddress.zipcode = req.body.facilityaddress.zipcode;
+    facilityinfo.facilityaddress.street = req.body.facilityaddress.facilitystreet;
+    facilityinfo.facilityaddress.city = req.body.facilityaddress.facilitycity;
+    facilityinfo.facilityaddress.state = req.body.facilityaddress.facilitystate;
+    facilityinfo.facilityaddress.zipcode = req.body.facilityaddress.facilityzipcode;
 
     facilityinfo.facilityowner = req.body.facilityowner;
-    facilityinfo.owneraddress.street = req.body.owneraddress.street;
-    facilityinfo.owneraddress.city = req.body.owneraddress.city;
-    facilityinfo.owneraddress.state = req.body.owneraddress.state;
-    facilityinfo.owneraddress.zipcode = req.body.owneraddress.zipcode;
+    facilityinfo.owneraddress.street = req.body.owneraddress.ownerstreet;
+    facilityinfo.owneraddress.city = req.body.owneraddress.ownercity;
+    facilityinfo.owneraddress.state = req.body.owneraddress.ownerstate;
+    facilityinfo.owneraddress.zipcode = req.body.owneraddress.ownerzipcode;
 
     facilityinfo.facilitydescription = req.body.facilitydescription;
-    facilityinfo.geometry.coordinates = req.body.geometry.coordinates;
-    //facilityinfo.geometry.coordinates = req.body.geometry.coordinates.long;
+    facilityinfo.geometry.coordinates.lat = req.body.geometry.coordinates.lat;
+    facilityinfo.geometry.coordinates.long = req.body.geometry.coordinates.long;
 
     facilityinfo.EPARegion = req.body.EPARegion;
     facilityinfo.stateoverride = req.body.stateoverride;
     facilityinfo.statetext = req.body.statetext;
 
     facilityinfo.businesstype = req.body.businesstype;
-
-    facilityinfo.security.twentyfourhours = req.body.twentyfourhours;
-    facilityinfo.security.beghours = req.body.security.beghours;
-    facilityinfo.security.endhours = req.body.security.endhours;
-    facilityinfo.security.days = req.body.security.days;
+    facilityinfo.securityexists = req.body.securityexists;
 
     facilityinfo.loadingareaexists = req.body.loadingareaexists;
 
@@ -154,22 +145,152 @@ api.put('/:id', (req, res) => {
 
 // '/v1/facilityinfo/:id - delete an item'
 api.delete('/:id', (req, res) => {
-  FacilityInfo.remove({
-    _id: req.params.id
-  },(err, facilityinfo)=> {
+  FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     if (err) {
-      res.send(err);
+      res.status(500).send(err);
+      return;
     }
-    res.json({ message: "FacilityInfo successfully removed." });
+    if (facilityinfo === null) {
+      res.status(404).send("Facility Not Found")
+      return;
+    }
+    FacilityInfo.remove({
+      _id: req.params.id
+    }, (err, facilityinfo) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      Security.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+      });
+
+      StorageLocation.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+      });
+
+      TankInfo.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+      });
+
+      LoadingAreaProperties.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+      });
+
+      LoadingRackProperties.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+      });
+
+      PreviousDischarge.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+      });
+
+      SPCCPlan.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+      });
+
+      MonthlyInspectionHeader.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+      });
+
+      MonthlyInspectionResults.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+      });
+
+      AnnualInspectionHeader.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+      });
+
+      AnnualInspectionResults.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+      });
+
+      PipingInspection.remove({
+              facilityinfo: req.params.id
+            }, (err, review) => {
+              if (err) {
+                res.send(err);
+              }
+            });
+
+      Containment.remove({
+          facilityinfo: req.params.id
+        }, (err, review) => {
+          if (err) {
+            res.send(err);
+          }
+        });
+
+      BusinessHours.remove({
+        facilityinfo: req.params.id
+      }, (err, review) => {
+        if (err) {
+          res.send(err);
+        }
+        res.json({message: "Business Hours Successfully Removed"});
+      });
+
+    });
   });
-});
+  });
+// ********* Uncomment these lines if other delete doesn't work *******************
+//  FacilityInfo.remove({
+//    _id: req.params.id
+//  },(err, facilityinfo)=> {
+//    res.json({ message: "FacilityInfo successfully removed." });
+//  });
+// });
 
 // ******* LoadingArea ******************
 
 // add loadingareaproperties
 //'/v1/facilityinfo/loadingareaproperties/add/:id'
 
-api.post('/loadingareaproperties/add/:id', (req, res) => {
+api.post('/loadingareaproperties/add/:id/:containmentid', (req, res) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     if (err) {
       res.send(err);
@@ -178,7 +299,7 @@ api.post('/loadingareaproperties/add/:id', (req, res) => {
      newLoadingAreaProperties.surfacematerial = req.body.surfacematerial;
      newLoadingAreaProperties.directionofflow = req.body.directionofflow;
      newLoadingAreaProperties.containmentflag = req.body.containmentflag;
-     newLoadingAreaProperties.contaiment = req.body.containment;
+     newLoadingAreaProperties.containmentid = req.params.containmentid;;
      newLoadingAreaProperties.facilityinfo = facilityinfo._id;
      newLoadingAreaProperties.save((err, loadingareaproperties) => {
        if (err) {
@@ -279,7 +400,7 @@ api.put('/loadingrackproperties/:id/edit', (req, res) => {
     { "$set": {'surfacematerial': req.body.surfacematerial,
                'directionofflow': req.body.directionofflow,
                'containmentflag': req.body.containmentflag,
-               'containment': req.body.containment}},
+               'containmentid': req.params.containmentid}},
     {new: true}).exec(function(err, loadingrackproperties) {
       console.log(loadingrackproperties);
       if (err) {
@@ -306,7 +427,7 @@ api.get('/loadingrackproperties/:id', (req, res) => {
 // add loadingrackproperties
 //'/v1/facilityinfo/loadingrackproperties/add/:id'
 
-api.post('/loadingrackproperties/add/:id', (req, res) => {
+api.post('/loadingrackproperties/add/:id/:containmentid', (req, res) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     if (err) {
       res.send(err);
@@ -315,7 +436,7 @@ api.post('/loadingrackproperties/add/:id', (req, res) => {
      newLoadingRackProperties.surfacematerial = req.body.surfacematerial;
      newLoadingRackProperties.directionofflow = req.body.directionofflow;
      newLoadingRackProperties.containmentflag = req.body.containmentflag;
-     newLoadingRackProperties.containment = req.body.containment;
+     newLoadingRackProperties.containmentid = req.params.containmentid;
      newLoadingRackProperties.facilityinfo = facilityinfo._id;
      newLoadingRackProperties.save((err, loadingrackproperties) => {
        if (err) {
@@ -393,17 +514,20 @@ api.delete('/loadingrackproperties/:id/:loadingrackid', (req, res) => {
      newSPCCPlan.drps1.name = req.body.drps1.name;
      newSPCCPlan.drps1.title = req.body.drps1.title;
      newSPCCPlan.drps1.phone = req.body.drps1.phone;
+     newSPCCPlan.drps1.alternate = req.body.drps1.alternate;
 
      newSPCCPlan.drps2.name = req.body.drps2.name;
      newSPCCPlan.drps2.title = req.body.drps2.title;
      newSPCCPlan.drps2.phone = req.body.drps2.phone;
+     newSPCCPlan.drps2.alternate = req.body.drps2.alternate;
 
      newSPCCPlan.drps3.name = req.body.drps3.name;
      newSPCCPlan.drps3.title = req.body.drps3.title;
      newSPCCPlan.drps3.phone = req.body.drps3.phone;
+     newSPCCPlan.drps3.alternate = req.body.drps3.alternate;
 
-     newSPCCPlan.locofplan[1] = req.body.locofplan1;
-     newSPCCPlan.locofplan[2] = req.body.locofplan2;
+     newSPCCPlan.locofplan1 = req.body.locofplan1;
+     newSPCCPlan.locofplan2 = req.body.locofplan2;
 
      newSPCCPlan.question1.text = req.body.question1.text;
      newSPCCPlan.question1.answer = req.body.question1.answer;
@@ -457,15 +581,18 @@ api.put('/spccplan/:id/edit', (req, res) => {
                'drps1.name': req.body.drps1.name,
                'drps1.title': req.body.drps1.title,
                'drps1.phone': req.body.drps1.phone,
-               'drps1.locofplan': req.body.drps1.locofplan,
+               'drps1.alternate': req.body.drps1.alternate,
                'drps2.name': req.body.drps2.name,
                'drps2.title': req.body.drps2.title,
                'drps2.phone': req.body.drps2.phone,
-               'drps2.locofplan': req.body.drps2.locofplan,
+               'drps2.alternate': req.body.drps2.alternate,
                'drps3.name': req.body.drps3.name,
                'drps3.title': req.body.drps3.title,
                'drps3.phone': req.body.drps3.phone,
-               'drps3.locofplan': req.body.drps3.locofplan,
+               'drps3.alternate': req.body.drps3.alternate,
+               'locofplan1': req.body.locofplan1,
+               'locofplan2': req.body.locofplan2,
+               'totalsitecapacity': req.body.totalsitecapacity,
                'question1.text': req.body.question1.text,
                'question1.answer': req.body.question1.answer,
                'question2.text': req.body.question2.text,
@@ -772,6 +899,8 @@ api.post('/tankinfo/add/:id', (req, res) => {
       res.send(err);
     }
     let newTankInfo = TankInfo();
+    newTankInfo.storagelocationid = req.body.storagelocationid;
+    newTankInfo.storagelocation = req.body.storagelocation;
     newTankInfo.category = req.body.category;
     newTankInfo.tankdesc = req.body.tankdesc;
     newTankInfo.capacity = req.body.capacity;
@@ -787,6 +916,7 @@ api.post('/tankinfo/add/:id', (req, res) => {
 
     newTankInfo.partiallyburied = req.body.partiallyburied;
     newTankInfo.registered = req.body.registered;
+    newTankInfo.directionofflow = req.body.directionofflow;
     newTankInfo.facilityinfo = facilityinfo._id;
 
     newTankInfo.save((err, tankinfo) => {
@@ -819,7 +949,9 @@ api.get('/tankinfo/:id', (req, res) => {
 api.put('/tankinfo/:id/edit', (req, res) => {
   console.log(req.params.id);
   TankInfo.findOneAndUpdate({'_id': req.params.id},
-    { "$set": {'category': req.body.category,
+    { "$set": { 'storagelocationid': req.body.storagelocationid,
+                'storagelocation': req.body.storagelocation,
+                'category': req.body.category,
                 'tankdesc': req.body.tankdesc,
                 'capacity': req.body.capacity,
                'unit': req.body.unit,
@@ -831,7 +963,8 @@ api.put('/tankinfo/:id/edit', (req, res) => {
                 'eft': req.body.eft,
                 'type': req.body.type,
                 'partiallyburied': req.body.partiallyburied,
-                'registered': req.body.registered}},
+                'registered': req.body.registered,
+                'directionofflow': req.body.directionofflow}},
     {new: true}).exec(function(err, tankinfo) {
       console.log(tankinfo);
       if (err) {
@@ -900,6 +1033,7 @@ api.post('/containment/add/:id', (req, res) => {
     }
     let newContainment = Containment();
      newContainment.doublewall = req.body.doublewall;
+     newContainment.containmenttype = req.body.containmenttype;
      newContainment.exists = req.body.exists;
      newContainment.material = req.body.material;
      newContainment.length = req.body.length;
@@ -968,6 +1102,7 @@ api.put('/containment/:id/edit', (req, res) => {
   console.log(req.params.id);
   Containment.findOneAndUpdate({'_id': req.params.id},
     { "$set": {'doublewall': req.body.doublewall,
+                'containmenttype': req.body.containmenttype,
                 'exists': req.body.exists,
                 'material': req.body.material,
                 'length': req.body.length,
@@ -975,9 +1110,7 @@ api.put('/containment/:id/edit', (req, res) => {
                 'height': req.body.height,
                 'floordrain': req.body.floordrain,
                 'oilwaterseparator': req.body.oilwaterseparator,
-                'drainpipesexist': req.body.material,
-
-
+                'drainpipesexist': req.body.drainpipesexist,
                 'pipe1properties.valved': req.body.pipe1properties.valved,
                 'pipe1properties.locks': req.body.pipe1properties.locks,
                 'pipe1properties.capped': req.body.pipe1properties.capped,
@@ -1716,6 +1849,219 @@ api.get('/annualinspectionresults/:id/:byfacility/:byheader', (req, res) => {
     }
   );
 });
+
+// ******* BusinessHours ******************
+
+// add businesshours
+//'/v1/facilityinfo/businesshours/add/:id'
+
+api.post('/businesshours/add/:id', (req, res) => {
+  console.log('inside post hours');
+  FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+    if (err) {
+      res.send(err);
+    }
+    let newBusinessHours = BusinessHours();
+     newBusinessHours.twentyfourhours = req.body.twentyfourhours;
+     newBusinessHours.schedule = req.body.schedule;
+     newBusinessHours.beghours = req.body.beghours;
+     newBusinessHours.endhours = req.body.endhours;
+     newBusinessHours.facilityinfo = facilityinfo._id;
+     newBusinessHours.save((err, businesshours) => {
+       if (err) {
+         res.send(err);
+       }
+       facilityinfo.businesshours.push(newBusinessHours);
+       facilityinfo.save(err => {
+         if (err) {
+           res.send(err);
+         }
+         res.json({ message: 'BusinessHours saved' });
+       });
+     });
+  });
+});
+
+// 'v1'/businesshours/:id - get BusinessHours by id
+api.get('/businesshours/:id', (req, res) => {
+  console.log('inside get hours');
+  BusinessHours.find({'facilityinfo': req.params.id}, (err, businesshours) => {
+    if (err) {
+      res.send(err);
+    }
+    res.json(businesshours);
+  });
+} );
+
+api.put('/businesshours/:id/edit', (req, res) => {
+  console.log(req.params.id);
+
+  BusinessHours.findOneAndUpdate({'_id': req.params.id},
+    { "$set": {'twentyfourhours': req.body.twentyfourhours,
+               'schedule': req.body.schedule,
+               'beghours': req.body.beghours,
+               'endhours': req.body.endhours}},
+    {new: true}).exec(function(err, businesshours) {
+      console.log(businesshours);
+      if (err) {
+        res.send(err);
+      } else if (businesshours != null) {
+        res.json ({ message: 'Business hours saved' });
+      } else {
+        res.send('hours not found');
+      }
+  });
+});
+
+// //v1/businesshours/:id - DELETE - remove hours
+api.delete('/businesshours/:id/:businesshoursid', (req, res) => {
+  BusinessHours.findById(req.params.businesshoursid, (err, businesshours) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (businesshours === null) {
+      res.status(404).send("hours not found")
+      return;
+    }
+    BusinessHours.remove({
+      _id: req.params.businesshoursid
+    }, (err, businesshours) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      res.json({message: "BusinessHours successufully removed."});
+    }
+  );
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (FacilityInfo === null) {
+        res.status(404).send("facility not found")
+        return;
+      }
+
+      var arraypostition =  facilityinfo.businesshours.indexOf(req.params.businesshoursid);
+      facilityinfo.businesshours.splice(arraypostition, 1);
+      facilityinfo.save(err => {
+        if (err) {
+          res.send(err);
+        }
+      });
+    });
+  });
+});
+
+
+// ******* Security ******************
+
+// add security
+//'/v1/facilityinfo/security/add/:id'
+
+api.post('/security/add/:id', (req, res) => {
+  FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+    if (err) {
+      res.send(err);
+    }
+    let newSecurity = Security();
+     newSecurity.twentyfourhours = req.body.twentyfourhours;
+     newSecurity.schedule = req.body.schedule;
+     newSecurity.beghours = req.body.beghours;
+     newSecurity.endhours = req.body.endhours;
+     newSecurity.facilityinfo = facilityinfo._id;
+     newSecurity.save((err, security) => {
+       if (err) {
+         res.send(err);
+       }
+       facilityinfo.security.push(newSecurity);
+       facilityinfo.save(err => {
+         if (err) {
+           res.send(err);
+         }
+         res.json({ message: 'Security saved' });
+       });
+     });
+  });
+});
+
+// 'v1'/security/:id - get Security by id
+api.get('/security/:id', (req, res) => {
+  console.log('inside get security');
+  Security.find({'facilityinfo': req.params.id}, (err, security) => {
+    if (err) {
+      res.send(err);
+    }
+    res.json(security);
+  });
+} );
+
+api.put('/security/:id/edit', (req, res) => {
+  console.log(req.params.id);
+
+  Security.findOneAndUpdate({'_id': req.params.id},
+    { "$set": {'twentyfourhours': req.body.twentyfourhours,
+               'schedule': req.body.schedule,
+               'beghours': req.body.beghours,
+               'endhours': req.body.endhours}},
+    {new: true}).exec(function(err, security) {
+      console.log(security);
+      if (err) {
+        res.send(err);
+      } else if (security != null) {
+        res.json ({ message: 'security saved' });
+      } else {
+        res.send('security not found');
+      }
+  });
+});
+
+// //v1/security/:id - DELETE - remove security
+api.delete('/security/:id/:securityid', (req, res) => {
+  Security.findById(req.params.securityid, (err, security) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    if (security === null) {
+      res.status(404).send("security not found")
+      return;
+    }
+    Security.remove({
+      _id: req.params.securityid
+    }, (err, security) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      res.json({message: "security successufully removed."});
+    }
+  );
+
+    FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      if (FacilityInfo === null) {
+        res.status(404).send("facility not found")
+        return;
+      }
+
+      var arraypostition =  facilityinfo.security.indexOf(req.params.securityid);
+      facilityinfo.security.splice(arraypostition, 1);
+      facilityinfo.save(err => {
+        if (err) {
+          res.send(err);
+        }
+      });
+    });
+  });
+});
+
 
 return api;
 
