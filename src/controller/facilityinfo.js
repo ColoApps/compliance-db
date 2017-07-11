@@ -26,9 +26,9 @@ export default({config, db }) => {
 
 // **********FacilityInfo***************
 
-  //'/v1/facilityinfo/add'
-//api.post('/add', authenticate,(req, res) => {
-  api.post('/add', (req, res) => {
+  '/v1/facilityinfo/add'
+api.post('/add', authenticate,(req, res) => {
+  //api.post('/add', (req, res) => {
   console.log('inside facility post');
   let newFacilityInfo = new FacilityInfo();
   newFacilityInfo.facilityname = req.body.facilityname;
@@ -38,7 +38,7 @@ export default({config, db }) => {
   newFacilityInfo.facilityaddress.zipcode = req.body.facilityaddress.facilityzipcode;
 
   newFacilityInfo.facilityowner = req.body.facilityowner;
-  newFacilityInfo.owneraddress.street = req.body.owneraddress.ownertreet;
+  newFacilityInfo.owneraddress.street = req.body.owneraddress.ownerstreet;
   newFacilityInfo.owneraddress.city = req.body.owneraddress.ownercity;
   newFacilityInfo.owneraddress.state = req.body.owneraddress.ownerstate;
   newFacilityInfo.owneraddress.zipcode = req.body.owneraddress.ownerzipcode;
@@ -73,7 +73,7 @@ export default({config, db }) => {
 });
 
 //'/v1/FacilityInfo - read'
-api.get('/', (req, res) => {
+api.get('/',  authenticate,(req, res) => {
 FacilityInfo.find({}, (err, facilityinfo) => {
   if (err) {
     res.send(err);
@@ -83,7 +83,7 @@ FacilityInfo.find({}, (err, facilityinfo) => {
 });
 
 // '/v1/facilityinfo/:id - get individual item'
-api.get('/:id', (req, res) => {
+api.get('/:id', authenticate,(req, res) => {
 //  FacilityInfo.find( { '_id': req.params.id } => {
 //  FacilityInfo.find( { '_id': req.params.id }, (err, facilityinfo) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
@@ -96,7 +96,7 @@ api.get('/:id', (req, res) => {
 
 // '/v1/facilityinfo/:id - Put (update) an item'
 // **** NEED TO ADD REST OF FIELDS  *******
-api.put('/:id', (req, res) => {
+api.put('/:id', authenticate,(req, res) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     if (err) {
       res.send(err);
@@ -127,6 +127,7 @@ api.put('/:id', (req, res) => {
     facilityinfo.loadingareaexists = req.body.loadingareaexists;
 
     facilityinfo.loadingracksexists = req.body.loadingracksexists;
+    console.log(req.body.loadingracksexists);
 
     facilityinfo.loadingoperations.exists = req.body.loadingoperations.exists;
     facilityinfo.loadingoperations.specific = req.body.loadingoperations.specific;
@@ -144,7 +145,7 @@ api.put('/:id', (req, res) => {
 });
 
 // '/v1/facilityinfo/:id - delete an item'
-api.delete('/:id', (req, res) => {
+api.delete('/:id', authenticate,(req, res) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     if (err) {
       res.status(500).send(err);
@@ -290,7 +291,7 @@ api.delete('/:id', (req, res) => {
 // add loadingareaproperties
 //'/v1/facilityinfo/loadingareaproperties/add/:id'
 
-api.post('/loadingareaproperties/add/:id/:containmentid', (req, res) => {
+api.post('/loadingareaproperties/add/:id/:containmentid', authenticate,(req, res) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     if (err) {
       res.send(err);
@@ -317,7 +318,7 @@ api.post('/loadingareaproperties/add/:id/:containmentid', (req, res) => {
 });
 
 // 'v1'/loadingareaproperties/:id - get loadingarea by id
-api.get('/loadingareaproperties/:id', (req, res) => {
+api.get('/loadingareaproperties/:id', authenticate,(req, res) => {
   console.log('inside get lap');
   LoadingAreaProperties.find({'facilityinfo': req.params.id}, (err, loadingareaproperties) => {
     if (err) {
@@ -327,7 +328,7 @@ api.get('/loadingareaproperties/:id', (req, res) => {
   });
 } );
 
-api.put('/loadingareaproperties/:id/edit', (req, res) => {
+api.put('/loadingareaproperties/:id/edit', authenticate,(req, res) => {
   console.log(req.params.id);
 
   LoadingAreaProperties.findOneAndUpdate({'_id': req.params.id},
@@ -348,7 +349,7 @@ api.put('/loadingareaproperties/:id/edit', (req, res) => {
 });
 
 // //v1/loadingareaproperties/:id - DELETE - remove a loading Area
-api.delete('/loadingareaproperties/:id/:loadingareaid', (req, res) => {
+api.delete('/loadingareaproperties/:id/:loadingareaid', authenticate,(req, res) => {
   LoadingAreaProperties.findById(req.params.loadingareaid, (err, loadingareaproperties) => {
     if (err) {
       res.status(500).send(err);
@@ -393,7 +394,7 @@ api.delete('/loadingareaproperties/:id/:loadingareaid', (req, res) => {
 
 // ************ LoadingRacks ****************
 
-api.put('/loadingrackproperties/:id/edit', (req, res) => {
+api.put('/loadingrackproperties/:id/edit', authenticate,(req, res) => {
   console.log(req.params.id);
 
   LoadingRackProperties.findOneAndUpdate({'_id': req.params.id},
@@ -414,7 +415,7 @@ api.put('/loadingrackproperties/:id/edit', (req, res) => {
 });
 
 // 'v1'/loadingrackproperties/:id - get loadingrack by id
-api.get('/loadingrackproperties/:id', (req, res) => {
+api.get('/loadingrackproperties/:id', authenticate,(req, res) => {
   console.log('inside get lrp');
   LoadingRackProperties.find({'facilityinfo': req.params.id}, (err, loadingrackproperties) => {
     if (err) {
@@ -427,7 +428,7 @@ api.get('/loadingrackproperties/:id', (req, res) => {
 // add loadingrackproperties
 //'/v1/facilityinfo/loadingrackproperties/add/:id'
 
-api.post('/loadingrackproperties/add/:id/:containmentid', (req, res) => {
+api.post('/loadingrackproperties/add/:id/:containmentid', authenticate,(req, res) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     if (err) {
       res.send(err);
@@ -454,7 +455,7 @@ api.post('/loadingrackproperties/add/:id/:containmentid', (req, res) => {
 });
 
 // //v1/loadingrackproperties/:id - DELETE - remove a loading rack
-api.delete('/loadingrackproperties/:id/:loadingrackid', (req, res) => {
+api.delete('/loadingrackproperties/:id/:loadingrackid', authenticate,(req, res) => {
   LoadingRackProperties.findById(req.params.loadingrackid, (err, loadingrackproperties) => {
     if (err) {
       res.status(500).send(err);
@@ -502,7 +503,7 @@ api.delete('/loadingrackproperties/:id/:loadingrackid', (req, res) => {
 // add spccplans
 //'/v1/facilityinfo/spccplans/add/:id'
 
- api.post('/spccplan/add/:id', (req, res) => {
+ api.post('/spccplan/add/:id', authenticate,(req, res) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     if (err) {
       res.send(err);
@@ -561,7 +562,7 @@ api.delete('/loadingrackproperties/:id/:loadingrackid', (req, res) => {
 });
 
  // '/v1/spccplan/:id - get plans for a facility'
-api.get('/spccplans/:id', (req, res) => {
+api.get('/spccplans/:id', authenticate,(req, res) => {
   console.log('inside get spccplan id');
 //SPCCPlan.find( { 'spccplans._id': req.params.id }, (err, spccplan) => {
   SPCCPlan.find({facilityinfo: req.params.id}, (err, spccplan) => {
@@ -572,7 +573,7 @@ api.get('/spccplans/:id', (req, res) => {
   });
 });
 
-api.put('/spccplan/:id/edit', (req, res) => {
+api.put('/spccplan/:id/edit', authenticate,(req, res) => {
   console.log(req.params.id);
 
   SPCCPlan.findOneAndUpdate({'_id': req.params.id},
@@ -616,7 +617,7 @@ api.put('/spccplan/:id/edit', (req, res) => {
 });
 
 // //v1/spccplan/:id - DELETE - remove a spccplan
-api.delete('/spccplan/:id/:spccplanid', (req, res) => {
+api.delete('/spccplan/:id/:spccplanid', authenticate,(req, res) => {
   SPCCPlan.findById(req.params.spccplanid, (err, spccplan) => {
     if (err) {
       res.status(500).send(err);
@@ -664,7 +665,7 @@ api.delete('/spccplan/:id/:spccplanid', (req, res) => {
 // add previousdischarge
 //'/v1/facilityinfo/previousdischarge/add/:id''
 
-api.post('/previousdischarge/add/:id', (req, res) => {
+api.post('/previousdischarge/add/:id', authenticate,(req, res) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     console.log(req.params);
     if (err) {
@@ -694,7 +695,7 @@ api.post('/previousdischarge/add/:id', (req, res) => {
 
 // get previousdischarge - specific
 // '/v1/previousdischarge/:id - get individual item'
-api.get('/previousdischarge/:id', (req, res) => {
+api.get('/previousdischarge/:id', authenticate,(req, res) => {
   console.log('inside get previousdischarge');
   PreviousDischarge.find({facilityinfo: req.params.id}, (err, previousdischarge) => {
     if (err) {
@@ -704,7 +705,7 @@ api.get('/previousdischarge/:id', (req, res) => {
   });
 });
 
-api.put('/previousdischarge/:id/edit', (req, res) => {
+api.put('/previousdischarge/:id/edit', authenticate,(req, res) => {
   console.log(req.params.id);
 
   PreviousDischarge.findOneAndUpdate({'_id': req.params.id},
@@ -725,7 +726,7 @@ api.put('/previousdischarge/:id/edit', (req, res) => {
 });
 
 // //v1/previousdischarge/:id - DELETE - remove a previous discharge
-api.delete('/previousdischarge/:id/:previousdischargeid', (req, res) => {
+api.delete('/previousdischarge/:id/:previousdischargeid', authenticate,(req, res) => {
   PreviousDischarge.findById(req.params.previousdischargeid, (err, previousdischarge) => {
     if (err) {
       res.status(500).send(err);
@@ -773,7 +774,7 @@ api.delete('/previousdischarge/:id/:previousdischargeid', (req, res) => {
 // add storagelocation
 //'/v1/facilityinfo/storagelocation/add/:id''
 
-api.post('/storagelocation/add/:id', (req, res) => {
+api.post('/storagelocation/add/:id', authenticate,(req, res) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     console.log(req.params);
     if (err) {
@@ -805,7 +806,7 @@ api.post('/storagelocation/add/:id', (req, res) => {
 
 // get storagelocation - specific
 // '/v1/storagelocation/:id - get by facility'
-api.get('/storagelocation/:id', (req, res) => {
+api.get('/storagelocation/:id', authenticate,(req, res) => {
   console.log('inside get storagelocation');
   StorageLocation.find({facilityinfo: req.params.id}, (err, storagelocation) => {
     if (err) {
@@ -820,7 +821,7 @@ api.get('/storagelocation/:id', (req, res) => {
   });
 });
 
-api.put('/storagelocation/:id/edit', (req, res) => {
+api.put('/storagelocation/:id/edit', authenticate,(req, res) => {
   console.log(req.params.id);
 
   StorageLocation.findOneAndUpdate({'_id': req.params.id},
@@ -844,7 +845,7 @@ api.put('/storagelocation/:id/edit', (req, res) => {
 });
 
 // //v1/storagelocation/:id - DELETE - remove a storagelocation
-api.delete('/storagelocation/:id/:storagelocationid', (req, res) => {
+api.delete('/storagelocation/:id/:storagelocationid', authenticate,(req, res) => {
   StorageLocation.findById(req.params.storagelocationid, (err, storagelocation) => {
     if (err) {
       res.status(500).send(err);
@@ -891,7 +892,7 @@ api.delete('/storagelocation/:id/:storagelocationid', (req, res) => {
 // add tankinfo
 //'/v1/facilityinfo/tankinfo/add'
 
-api.post('/tankinfo/add/:id', (req, res) => {
+api.post('/tankinfo/add/:id', authenticate,(req, res) => {
   console.log('inside tank post');
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     console.log('inside add tankinfo');
@@ -936,7 +937,7 @@ api.post('/tankinfo/add/:id', (req, res) => {
 
 // get tankinfo - specific
 // '/v1/tankinfo/:id - get individual item'
-api.get('/tankinfo/:id', (req, res) => {
+api.get('/tankinfo/:id', authenticate,(req, res) => {
   console.log('inside get tankinfo');
   TankInfo.find({facilityinfo: req.params.id}, (err, tankinfo) => {
     if (err) {
@@ -946,7 +947,7 @@ api.get('/tankinfo/:id', (req, res) => {
   });
 });
 
-api.put('/tankinfo/:id/edit', (req, res) => {
+api.put('/tankinfo/:id/edit', authenticate,(req, res) => {
   console.log(req.params.id);
   TankInfo.findOneAndUpdate({'_id': req.params.id},
     { "$set": { 'storagelocationid': req.body.storagelocationid,
@@ -979,7 +980,7 @@ api.put('/tankinfo/:id/edit', (req, res) => {
 });
 
 // //v1/tankinfo/:id - DELETE - remove tank info
-api.delete('/tankinfo/:id/:tankinfoid', (req, res) => {
+api.delete('/tankinfo/:id/:tankinfoid', authenticate,(req, res) => {
   TankInfo.findById(req.params.tankinfoid, (err, tankinfo) => {
     if (err) {
       res.status(500).send(err);
@@ -1024,7 +1025,7 @@ api.delete('/tankinfo/:id/:tankinfoid', (req, res) => {
 
 // ********** Containment ******************
 
-api.post('/containment/add/:id', (req, res) => {
+api.post('/containment/add/:id', authenticate,(req, res) => {
   console.log('inside containment post');
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     console.log('inside add containment');
@@ -1088,7 +1089,7 @@ api.post('/containment/add/:id', (req, res) => {
 
 // get containment - specific
 // '/v1/containment/:id - get individual item'
-api.get('/containment/:id', (req, res) => {
+api.get('/containment/:id', authenticate,(req, res) => {
   console.log('inside get containment');
   Containment.find({facilityinfo: req.params.id}, (err, containment) => {
     if (err) {
@@ -1098,7 +1099,7 @@ api.get('/containment/:id', (req, res) => {
   });
 });
 
-api.put('/containment/:id/edit', (req, res) => {
+api.put('/containment/:id/edit', authenticate,(req, res) => {
   console.log(req.params.id);
   Containment.findOneAndUpdate({'_id': req.params.id},
     { "$set": {'doublewall': req.body.doublewall,
@@ -1148,7 +1149,7 @@ api.put('/containment/:id/edit', (req, res) => {
 });
 
 // //v1/containment/:id - DELETE - remove a containment
-api.delete('/containment/:id/:containmentid', (req, res) => {
+api.delete('/containment/:id/:containmentid', authenticate,(req, res) => {
   Containment.findById(req.params.containmentid, (err, containment) => {
     if (err) {
       res.status(500).send(err);
@@ -1195,7 +1196,7 @@ api.delete('/containment/:id/:containmentid', (req, res) => {
   // add pipinginspection
   //'/v1/facilityinfo/pipinginspection/add/:id''
 
-  api.post('/pipinginspection/add/:id', (req, res) => {
+  api.post('/pipinginspection/add/:id', authenticate,(req, res) => {
     console.log('inside post pi');
     FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
       console.log(req.params);
@@ -1226,7 +1227,7 @@ api.delete('/containment/:id/:containmentid', (req, res) => {
 
   // get pipinginspection - specific
   // '/v1/pipinginspection/:id - get individual item'
-  api.get('/pipinginspection/:id', (req, res) => {
+  api.get('/pipinginspection/:id', authenticate,(req, res) => {
     console.log('inside get pipinginspection');
     PipingInspection.find({facilityinfo: req.params.id}, (err, pipinginspection) => {
       if (err) {
@@ -1258,7 +1259,7 @@ api.delete('/containment/:id/:containmentid', (req, res) => {
   });
 
   // //v1/pipinginspection/:id - DELETE - remove a pipe inspection
-  api.delete('/pipinginspection/:id/:pipinginspectionid', (req, res) => {
+  api.delete('/pipinginspection/:id/:pipinginspectionid', authenticate,(req, res) => {
     PipingInspection.findById(req.params.pipinginspectionid, (err, pipinginspection) => {
       console.log(pipinginspection);
       if (err) {
@@ -1310,7 +1311,7 @@ api.delete('/containment/:id/:containmentid', (req, res) => {
   // add monthlyinspectionheader
   //'/v1/facilityinfo/monthlyinspectionheader/add/:id''
 
-  api.post('/monthlyinspectionheader/add/:id', (req, res) => {
+  api.post('/monthlyinspectionheader/add/:id', authenticate,(req, res) => {
     console.log('inside post mih');
 
     FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
@@ -1341,7 +1342,7 @@ api.delete('/containment/:id/:containmentid', (req, res) => {
 
   // get monthlyinspectionheader - specific
   // '/v1/monthlyinspectionheader/:id - get individual item'
-  api.get('/monthlyinspectionheader/:id', (req, res) => {
+  api.get('/monthlyinspectionheader/:id', authenticate,(req, res) => {
     console.log('inside get monthlyinspectionheader');
     MonthlyInspectionHeader.find({facilityinfo: req.params.id}, (err, monthlyinspectionheader) => {
       if (err) {
@@ -1353,7 +1354,7 @@ api.delete('/containment/:id/:containmentid', (req, res) => {
 
 // put monthlyinspectionheader
 // '/v1/monthlyinspectionheader/:id '
-  api.put('/monthlyinspectionheader/:id/edit', (req, res) => {
+  api.put('/monthlyinspectionheader/:id/edit', authenticate,(req, res) => {
     console.log(req.params.id);
     MonthlyInspectionHeader.findOneAndUpdate({'_id': req.params.id},
       { "$set": {'date': req.body.date,
@@ -1372,85 +1373,85 @@ api.delete('/containment/:id/:containmentid', (req, res) => {
   });
 
   // //v1/monthlyinspectionheader/:id - DELETE - remove a monthly inspection
-  api.delete('/monthlyinspectionheader/:id/:monthlyinspectionheaderid', (req, res) => {
+  api.delete('/monthlyinspectionheader/:id/:monthlyinspectionheaderid', authenticate,(req, res) => {
     MonthlyInspectionHeader.findById(req.params.monthlyinspectionheaderid, (err, monthlyinspectionheader) => {
       if (err) {
         res.status(500).send(err);
         return;
-      }
-      if (monthlyinspectionheader === null) {
-        res.status(404).send("monthly inspection not found")
-        return;
-      }
-      MonthlyInspectionHeader.remove({
-        _id: req.params.monthlyinspectionheaderid
-        }, (err, monthlyinspectionheader) => {
-          console.log(monthlyinspectionheader);
-        if (err) {
-          res.status(500).send(err);
+        }
+        if (monthlyinspectionheader === null) {
+          res.status(404).send("monthly inspection not found")
           return;
         }
-        //res.json({message: "deleted header mih"});
-      }
-      );
+        MonthlyInspectionHeader.remove({
+          _id: req.params.monthlyinspectionheaderid
+          }, (err, monthlyinspectionheader) => {
+            console.log(monthlyinspectionheader);
+            if (err) {
+              res.status(500).send(err);
+              return;
+            }
+            //res.json({message: "deleted header mih"});
+          }
+        );
 
-    });
-
-    var resultsArray = [];
-    MonthlyInspectionResults.find({inspectionheaderID: req.params.monthlyinspectionheaderid}, (err, monthlyinspectionresults) => {
-      if (err) {
-        res.status(500).send(err);
-        return;
-      }
-
-      res.json(monthlyinspectionresults);
-
-      for (var i=0; i<monthlyinspectionresults.length; i++) {
-        resultsArray[i] = monthlyinspectionresults._id;
-      }
-    });
-
-    MonthlyInspectionResults.remove({inspectionheaderID: req.params.monthlyinspectionheaderid}, (err, review) => {
-        if (err) {
-        res.send(err);
-      }
-      // res.json({message: "Monthly Results Successfully Removed"});
       });
 
-      FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+      var resultsArray = [];
+      MonthlyInspectionResults.find({inspectionheaderID: req.params.monthlyinspectionheaderid}, (err, monthlyinspectionresults) => {
         if (err) {
           res.status(500).send(err);
           return;
         }
-        if (FacilityInfo === null) {
-          res.status(404).send("facility not found")
-          return;
-        }
 
-        for (var i=0; i<resultsArray.length; i++) {
-          var arrayposition2 = facilityinfo.monthlyinspectionresults.indexOf(resultsArray[i]);
-          facilityinfo.monthlyinspectionresults.splice(arrayposition2, 1);
-          facilityinfo.save(err => {
-            res.send(err);
-          });
-        }
+        res.json(monthlyinspectionresults);
 
-        var arraypostition =  facilityinfo.monthlyinspectionheader.indexOf(req.params.monthlyinspectionheaderid);
-        facilityinfo.monthlyinspectionheader.splice(arraypostition, 1);
-        facilityinfo.save(err => {
+        for (var i=0; i<monthlyinspectionresults.length; i++) {
+          resultsArray[i] = monthlyinspectionresults._id;
+        }
+      });
+
+      MonthlyInspectionResults.remove({inspectionheaderID: req.params.monthlyinspectionheaderid}, (err, review) => {
           if (err) {
             res.send(err);
           }
+          // res.json({message: "Monthly Results Successfully Removed"});
         });
-    });
-  });
+
+        FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+          if (err) {
+            res.status(500).send(err);
+            return;
+          }
+          if (FacilityInfo === null) {
+            res.status(404).send("facility not found")
+            return;
+          }
+
+          for (var i=0; i<resultsArray.length; i++) {
+            var arrayposition2 = facilityinfo.monthlyinspectionresults.indexOf(resultsArray[i]);
+            facilityinfo.monthlyinspectionresults.splice(arrayposition2, 1);
+            facilityinfo.save(err => {
+              res.send(err);
+            });
+          }
+
+          var arraypostition =  facilityinfo.monthlyinspectionheader.indexOf(req.params.monthlyinspectionheaderid);
+          facilityinfo.monthlyinspectionheader.splice(arraypostition, 1);
+          facilityinfo.save(err => {
+            if (err) {
+              res.send(err);
+            }
+          });
+        });
+      });
 
   // ************ MonthlyInspectionResults ***************
 
   // add monthlyinspectionresults
   //'/v1/facilityinfo/monthlyinspectionresults/add/:id''
 
-  api.post('/monthlyinspectionresults/add/:id/:headerid', (req, res) => {
+  api.post('/monthlyinspectionresults/add/:id/:headerid', authenticate,(req, res) => {
     console.log('inside post mih');
 
     FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
@@ -1484,7 +1485,7 @@ api.delete('/containment/:id/:containmentid', (req, res) => {
 
   // get monthlyinspectionresults - specific facility
   // '/v1/monthlyinspectionresults/:id - get individual item'
-api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
+api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', authenticate,(req, res) => {
 
     var byfacility;
     byfacility = req.params.byfacility;
@@ -1511,7 +1512,7 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
 
 // put monthlyinspectionresults
 // '/v1/monthlyinspectionresults/:id '
-  api.put('/monthlyinspectionresults/:id/edit', (req, res) => {
+  api.put('/monthlyinspectionresults/:id/edit', authenticate,(req, res) => {
     console.log(req.params.id);
     MonthlyInspectionResults.findOneAndUpdate({'_id': req.params.id},
       { "$set": {'questionnumber': req.body.questionnumber,
@@ -1532,7 +1533,7 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
   });
 
   // //v1/monthlyinspectionresults/:id - DELETE - remove inspection results
-  api.delete('/monthlyinspectionresults/:id/:monthlyinspectionresultsid', (req, res) => {
+  api.delete('/monthlyinspectionresults/:id/:monthlyinspectionresultsid', authenticate,(req, res) => {
     MonthlyInspectionResults.findById(req.params.monthlyinspectionresultsid, (err, monthlyinspectionresults) => {
       console.log(monthlyinspectionresults);
       if (err) {
@@ -1582,7 +1583,7 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
   // add annualinspectionheader
   //'/v1/facilityinfo/annualinspectionheader/add/:id''
 
-  api.post('/annualinspectionheader/add/:id', (req, res) => {
+  api.post('/annualinspectionheader/add/:id', authenticate,(req, res) => {
     console.log('inside post aih');
 
     FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
@@ -1613,7 +1614,7 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
 
   // get annualinspectionheader - specific
   // '/v1/annualinspectionheader/:id - get individual item'
-  api.get('/annualinspectionheader/:id', (req, res) => {
+  api.get('/annualinspectionheader/:id', authenticate,(req, res) => {
     console.log('inside get annualinspectionheader');
   AnnualInspectionHeader.find({facilityinfo: req.params.id}, (err, annualinspectionheader) => {
       if (err) {
@@ -1625,7 +1626,7 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
 
 // put annualinspectionheader
 // '/v1/annualinspectionheader/:id '
-  api.put('/annualinspectionheader/:id/edit', (req, res) => {
+  api.put('/annualinspectionheader/:id/edit', authenticate,(req, res) => {
     console.log(req.params.id);
     AnnualInspectionHeader.findOneAndUpdate({'_id': req.params.id},
       { "$set": {'date': req.body.date,
@@ -1644,7 +1645,7 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
   });
 
   //v1/facilityinfo/annualinspectionheader/:id/:annualinspectionheaderid - remove an anuual inspection
-  api.delete('/annualinspectionheader/:id/:annualinspectionheaderid', (req, res) => {
+  api.delete('/annualinspectionheader/:id/:annualinspectionheaderid', authenticate,(req, res) => {
     AnnualInspectionHeader.findById(req.params.annualinspectionheaderid, (err, annualinspectionheader) => {
       if (err) {
         res.status(500).send(err);
@@ -1722,7 +1723,7 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
   // add annualinspectionresults
   //'/v1/facilityinfo/annualinspectionresults/add/:id''
 
-  api.post('/annualinspectionresults/add/:id/:headerid', (req, res) => {
+  api.post('/annualinspectionresults/add/:id/:headerid', authenticate,(req, res) => {
     console.log('inside post mih');
 
     FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
@@ -1757,7 +1758,7 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', (req, res) => {
   // get annualinspectionresults - specific facility
   // '/v1/annualinspectionresults/:id - get individual item'
 
-api.get('/annualinspectionresults/:id/:byfacility/:byheader', (req, res) => {
+api.get('/annualinspectionresults/:id/:byfacility/:byheader', authenticate,(req, res) => {
 
       var byfacility;
       byfacility = req.params.byfacility;
@@ -1784,7 +1785,7 @@ api.get('/annualinspectionresults/:id/:byfacility/:byheader', (req, res) => {
 
 // put annualinspectionresults
 // '/v1/annualinspectionresults/:id '
-  api.put('/annualinspectionresults/:id/edit', (req, res) => {
+  api.put('/annualinspectionresults/:id/edit', authenticate,(req, res) => {
     console.log(req.params.id);
     AnnualInspectionResults.findOneAndUpdate({'_id': req.params.id},
       { "$set": {'questionnumber': req.body.questionnumber,
@@ -1805,7 +1806,7 @@ api.get('/annualinspectionresults/:id/:byfacility/:byheader', (req, res) => {
   });
 
   // //v1/annualinspectionresults/:id - DELETE - remove inspection results
-  api.delete('/annualinspectionresults/:id/:annualinspectionresultsid', (req, res) => {
+  api.delete('/annualinspectionresults/:id/:annualinspectionresultsid', authenticate,(req, res) => {
     AnnualInspectionResults.findById(req.params.annualinspectionresultsid, (err, annualinspectionresults) => {
       console.log(annualinspectionresults);
       if (err) {
@@ -1855,7 +1856,7 @@ api.get('/annualinspectionresults/:id/:byfacility/:byheader', (req, res) => {
 // add businesshours
 //'/v1/facilityinfo/businesshours/add/:id'
 
-api.post('/businesshours/add/:id', (req, res) => {
+api.post('/businesshours/add/:id', authenticate,(req, res) => {
   console.log('inside post hours');
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     if (err) {
@@ -1883,7 +1884,7 @@ api.post('/businesshours/add/:id', (req, res) => {
 });
 
 // 'v1'/businesshours/:id - get BusinessHours by id
-api.get('/businesshours/:id', (req, res) => {
+api.get('/businesshours/:id', authenticate,(req, res) => {
   console.log('inside get hours');
   BusinessHours.find({'facilityinfo': req.params.id}, (err, businesshours) => {
     if (err) {
@@ -1893,7 +1894,7 @@ api.get('/businesshours/:id', (req, res) => {
   });
 } );
 
-api.put('/businesshours/:id/edit', (req, res) => {
+api.put('/businesshours/:id/edit', authenticate,(req, res) => {
   console.log(req.params.id);
 
   BusinessHours.findOneAndUpdate({'_id': req.params.id},
@@ -1914,7 +1915,7 @@ api.put('/businesshours/:id/edit', (req, res) => {
 });
 
 // //v1/businesshours/:id - DELETE - remove hours
-api.delete('/businesshours/:id/:businesshoursid', (req, res) => {
+api.delete('/businesshours/:id/:businesshoursid', authenticate,(req, res) => {
   BusinessHours.findById(req.params.businesshoursid, (err, businesshours) => {
     if (err) {
       res.status(500).send(err);
@@ -1962,7 +1963,7 @@ api.delete('/businesshours/:id/:businesshoursid', (req, res) => {
 // add security
 //'/v1/facilityinfo/security/add/:id'
 
-api.post('/security/add/:id', (req, res) => {
+api.post('/security/add/:id', authenticate,(req, res) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
     if (err) {
       res.send(err);
@@ -1989,7 +1990,7 @@ api.post('/security/add/:id', (req, res) => {
 });
 
 // 'v1'/security/:id - get Security by id
-api.get('/security/:id', (req, res) => {
+api.get('/security/:id', authenticate,(req, res) => {
   console.log('inside get security');
   Security.find({'facilityinfo': req.params.id}, (err, security) => {
     if (err) {
@@ -2020,7 +2021,7 @@ api.put('/security/:id/edit', (req, res) => {
 });
 
 // //v1/security/:id - DELETE - remove security
-api.delete('/security/:id/:securityid', (req, res) => {
+api.delete('/security/:id/:securityid', authenticate,(req, res) => {
   Security.findById(req.params.securityid, (err, security) => {
     if (err) {
       res.status(500).send(err);
