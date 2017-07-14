@@ -293,6 +293,7 @@ api.delete('/:id', authenticate,(req, res) => {
 
 api.post('/loadingareaproperties/add/:id/:containmentid', authenticate,(req, res) => {
   FacilityInfo.findById(req.params.id, (err, facilityinfo) => {
+    console.log(facilityinfo._id);
     if (err) {
       res.send(err);
     }
@@ -328,7 +329,7 @@ api.get('/loadingareaproperties/:id', authenticate,(req, res) => {
   });
 } );
 
-api.put('/loadingareaproperties/:id/edit', authenticate,(req, res) => {
+api.put('/loadingareaproperties/edit/:id', authenticate,(req, res) => {
   console.log(req.params.id);
 
   LoadingAreaProperties.findOneAndUpdate({'_id': req.params.id},
@@ -394,7 +395,7 @@ api.delete('/loadingareaproperties/:id/:loadingareaid', authenticate,(req, res) 
 
 // ************ LoadingRacks ****************
 
-api.put('/loadingrackproperties/:id/edit', authenticate,(req, res) => {
+api.put('/loadingrackproperties/edit/:id', authenticate,(req, res) => {
   console.log(req.params.id);
 
   LoadingRackProperties.findOneAndUpdate({'_id': req.params.id},
@@ -573,7 +574,7 @@ api.get('/spccplans/:id', authenticate,(req, res) => {
   });
 });
 
-api.put('/spccplan/:id/edit', authenticate,(req, res) => {
+api.put('/spccplan/edit/:id', authenticate,(req, res) => {
   console.log(req.params.id);
 
   SPCCPlan.findOneAndUpdate({'_id': req.params.id},
@@ -705,7 +706,7 @@ api.get('/previousdischarge/:id', authenticate,(req, res) => {
   });
 });
 
-api.put('/previousdischarge/:id/edit', authenticate,(req, res) => {
+api.put('/previousdischarge/edit/:id', authenticate,(req, res) => {
   console.log(req.params.id);
 
   PreviousDischarge.findOneAndUpdate({'_id': req.params.id},
@@ -947,7 +948,7 @@ api.get('/tankinfo/:id', authenticate,(req, res) => {
   });
 });
 
-api.put('/tankinfo/:id/edit', authenticate,(req, res) => {
+api.put('/tankinfo/edit/:id', authenticate,(req, res) => {
   console.log(req.params.id);
   TankInfo.findOneAndUpdate({'_id': req.params.id},
     { "$set": { 'storagelocationid': req.body.storagelocationid,
@@ -1099,7 +1100,7 @@ api.get('/containment/:id', authenticate,(req, res) => {
   });
 });
 
-api.put('/containment/:id/edit', authenticate,(req, res) => {
+api.put('/containment/edit/:id', authenticate,(req, res) => {
   console.log(req.params.id);
   Containment.findOneAndUpdate({'_id': req.params.id},
     { "$set": {'doublewall': req.body.doublewall,
@@ -1237,7 +1238,7 @@ api.delete('/containment/:id/:containmentid', authenticate,(req, res) => {
     });
   });
 
-  api.put('/pipinginspection/:id/edit', (req, res) => {
+  api.put('/pipinginspection/edit/:id', (req, res) => {
     console.log(req.params.id);
 
     PipingInspection.findOneAndUpdate({'_id': req.params.id},
@@ -1354,7 +1355,7 @@ api.delete('/containment/:id/:containmentid', authenticate,(req, res) => {
 
 // put monthlyinspectionheader
 // '/v1/monthlyinspectionheader/:id '
-  api.put('/monthlyinspectionheader/:id/edit', authenticate,(req, res) => {
+  api.put('/monthlyinspectionheader/edit/:id', authenticate,(req, res) => {
     console.log(req.params.id);
     MonthlyInspectionHeader.findOneAndUpdate({'_id': req.params.id},
       { "$set": {'date': req.body.date,
@@ -1512,7 +1513,7 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', authenticate,(req
 
 // put monthlyinspectionresults
 // '/v1/monthlyinspectionresults/:id '
-  api.put('/monthlyinspectionresults/:id/edit', authenticate,(req, res) => {
+  api.put('/monthlyinspectionresults/edit/:id', authenticate,(req, res) => {
     console.log(req.params.id);
     MonthlyInspectionResults.findOneAndUpdate({'_id': req.params.id},
       { "$set": {'questionnumber': req.body.questionnumber,
@@ -1626,7 +1627,7 @@ api.get('/monthlyinspectionresults/:id/:byfacility/:byheader', authenticate,(req
 
 // put annualinspectionheader
 // '/v1/annualinspectionheader/:id '
-  api.put('/annualinspectionheader/:id/edit', authenticate,(req, res) => {
+  api.put('/annualinspectionheader/edit/:id', authenticate,(req, res) => {
     console.log(req.params.id);
     AnnualInspectionHeader.findOneAndUpdate({'_id': req.params.id},
       { "$set": {'date': req.body.date,
@@ -1785,7 +1786,7 @@ api.get('/annualinspectionresults/:id/:byfacility/:byheader', authenticate,(req,
 
 // put annualinspectionresults
 // '/v1/annualinspectionresults/:id '
-  api.put('/annualinspectionresults/:id/edit', authenticate,(req, res) => {
+  api.put('/annualinspectionresults/edit/:id', authenticate,(req, res) => {
     console.log(req.params.id);
     AnnualInspectionResults.findOneAndUpdate({'_id': req.params.id},
       { "$set": {'questionnumber': req.body.questionnumber,
@@ -1894,7 +1895,7 @@ api.get('/businesshours/:id', authenticate,(req, res) => {
   });
 } );
 
-api.put('/businesshours/:id/edit', authenticate,(req, res) => {
+api.put('/businesshours/edit/:id', authenticate,(req, res) => {
   console.log(req.params.id);
 
   BusinessHours.findOneAndUpdate({'_id': req.params.id},
@@ -2000,7 +2001,7 @@ api.get('/security/:id', authenticate,(req, res) => {
   });
 } );
 
-api.put('/security/:id/edit', (req, res) => {
+api.put('/security/edit/:id', (req, res) => {
   console.log(req.params.id);
 
   Security.findOneAndUpdate({'_id': req.params.id},
